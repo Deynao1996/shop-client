@@ -1,6 +1,10 @@
+import MainPage from '../pages/mainPage/MainPage.js';
+
 const  App = () => {
   return (
-    <h1>Test123</h1>
+    <>
+      <MainPage/>
+    </>
   );
 }
 
