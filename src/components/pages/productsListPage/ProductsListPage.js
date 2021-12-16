@@ -1,18 +1,20 @@
 import {HeaderBanner, HeaderPromo} from '../../header/Header.js';
 import Footer from '../../footer/Footer.js';
-import Cart from '../../cart/Cart.js';
+import Products from '../../products/Products.js';
+import Sort from '../../sort/Sort.js';
 
-const CartPage = () => {
+const ProductsListPage = () => {
   return (
     <>
       <header className="header">
         <HeaderPromo />
         <HeaderBanner />
       </header>
-      <Cart />
+      <Sort />
+      <Products />
       <Footer />
     </>
   )
 };
 
-export default CartPage;
+export default ProductsListPage;

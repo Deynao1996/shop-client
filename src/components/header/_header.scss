@@ -1,0 +1,70 @@
+.header {
+  &__banner {
+    height: 30px;
+    background-color: teal;
+    color: white;
+    font-size: 14px;
+    line-height: 30px;
+    font-weight: 500;
+    text-align: center;
+  }
+  &__promo {
+    min-height: 60px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &_search {
+      position: relative;
+      span {
+        font-size: 14px;
+        cursor: pointer;
+      }
+      input {
+        width: 190px;
+        height: 30px;
+        padding: 5px 25px 5px 5px;
+        margin-left: 25px;
+      }
+      label {
+        position: absolute;
+        right: 4%;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    &_link {
+      font-weight: bold;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-size: 2em;
+      color: black;
+    }
+    &_act {
+      display: flex;
+      a {
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+        text-transform: uppercase;
+        margin-left: 25px;
+      }
+      &-cart {
+        position: relative;
+        div {
+          position: absolute;
+          top: -58%;
+          right: -80%;
+          width: 20px;
+          height: 20px;
+          color: #fff;
+          background-color: #3f51b5;
+          text-align: center;
+          line-height: 20px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}

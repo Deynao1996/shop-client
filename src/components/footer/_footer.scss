@@ -1,0 +1,113 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  &__content {
+    flex: 1;
+    padding: 20px;
+    &-title {
+      display: block;
+      font-size: 2em;
+      margin-block-start: 0.67em;
+      margin-block-end: 0.67em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+    }
+    &-descr {
+      margin: 20px 0;
+      display: block;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+    }
+    &-socials {
+      display: flex;
+      a {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        color: white;
+        background-color: #3B5999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+        text-decoration: none;
+        &:nth-child(2) {
+          background-color: #E4405F;
+        }
+        &:nth-child(3) {
+          background-color: #55ACEE;
+        }
+        &:nth-child(4) {
+          background-color: #E60023;
+        }
+        svg {
+          fill: currentColor;
+          width: 1em;
+          height: 1em;
+          display: inline-block;
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+  &__links {
+    flex: 1;
+    padding: 20px;
+    &-title {
+      display: block;
+      font-size: 1.17em;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    &-list {
+      display: flex;
+      flex-flow: wrap;
+      li {
+        width: 50%;
+        margin-bottom: 10px;
+        list-style: none;
+        a {
+          text-decoration: none;
+          color: black;
+        }
+      }
+    }
+  }
+  &__contact {
+    flex: 1;
+    padding: 20px;
+    &-title {
+      margin-bottom: 30px;
+      display: block;
+      font-size: 1.17em;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold;
+    }
+    &-adress, &-tel, &-email {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      svg {
+        margin-right: 10px;
+        fill: currentColor;
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+        font-size: 1.5rem;
+        transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        flex-shrink: 0;
+        user-select: none;
+      }
+    }
+  }
+}
