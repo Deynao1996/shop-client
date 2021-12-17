@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+
 import {FaSearch} from 'react-icons/fa';
 import {HiShoppingCart} from "react-icons/hi";
 import {AiFillHeart} from "react-icons/ai";
@@ -16,12 +18,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                        <a href="#">
+                        <Link to="/products/123">
                           <FaSearch />
-                        </a>
-                        <a href="#">
+                        </Link>
+                        <Link to="/cart">
                           <HiShoppingCart />
-                        </a>
+                        </Link>
                         <a href="#">
                           <AiFillHeart />
                         </a>
@@ -36,12 +38,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -56,12 +58,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -76,12 +78,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -96,12 +98,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -116,12 +118,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -136,12 +138,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>
@@ -156,12 +158,12 @@ const Products = () => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                      <a href="#">
+                      <Link to="/products/123">
                         <FaSearch />
-                      </a>
-                      <a href="#">
+                      </Link>
+                      <Link to="/cart">
                         <HiShoppingCart />
-                      </a>
+                      </Link>
                       <a href="#">
                         <AiFillHeart />
                       </a>

@@ -1,0 +1,28 @@
+.error {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient( rgba(255,255,255,0.5), rgba(255,255,255,0.5) ), url(https://images.pexels.com/photos/6984650/pexels-photo-6984650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940) center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &__wrapper {
+    width: 25%;
+    padding: 20px;
+    background-color: white;
+  }
+  h1, h2 {
+    text-align: center;
+  }
+  h2 {
+    margin: 20px 0 40px 0;
+  }
+  a, span {
+    margin: 10px 0;
+    display: block;
+    font-size: 15px;
+    text-align: center;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

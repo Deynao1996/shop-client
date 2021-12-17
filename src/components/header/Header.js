@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+
 import {FaSearch} from 'react-icons/fa';
 import {HiShoppingCart} from "react-icons/hi";
 
@@ -18,14 +20,14 @@ const HeaderPromo = () => {
             </label>
             <input type="text" id="searchinput" placeholder="Search"/>
           </div>
-          <a href="#" className="header__promo_link">LAMA</a>
+          <Link to="/" className="header__promo_link">LAMA</Link>
           <div className="header__promo_act">
-              <a href="#" className="header__promo_act-reg">Register</a>
-              <a href="#" className="header__promo_act-signin">Sign in</a>
-              <a href="#" className="header__promo_act-cart">
+              <Link to="/register" className="header__promo_act-reg">Register</Link>
+              <Link to="/signin" className="header__promo_act-signin">Sign in</Link>
+              <Link to="/cart" className="header__promo_act-cart">
                 <HiShoppingCart size="1.2em"/>
                 <div>4</div>
-              </a>
+              </Link>
           </div>
       </div>
     </>

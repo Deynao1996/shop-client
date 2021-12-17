@@ -1,3 +1,5 @@
+import {Link} from 'react-router-dom';
+
 import './_cart.scss'
 
 const Cart = () => {
@@ -5,10 +7,10 @@ const Cart = () => {
     <section className="cart">
         <div className="cart__title">YOUR BAG</div>
             <div className="cart__nav">
-                <a href="#" className="cart__nav-cont">CONTINUE SHOPPING</a>
+                <Link to="/products" className="cart__nav-cont">CONTINUE SHOPPING</Link>
                 <div className="cart__nav-links">
-                  <a href="#">Shopping Bag(2)</a>
-                  <a href="#">Your Wishlist (0)</a>
+                  <Link to="/cart">Shopping Bag(2)</Link>
+                  <Link to="/wishlist">Your Wishlist (0)</Link>
                 </div>
                 <button className="cart__nav-checkout">CHECKOUT NOW</button>
             </div>
