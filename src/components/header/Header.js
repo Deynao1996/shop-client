@@ -26,7 +26,7 @@ const HeaderPromo = () => {
               <Link to="/signin" className="header__promo_act-signin">Sign in</Link>
               <Link to="/cart" className="header__promo_act-cart">
                 <HiShoppingCart size="1.2em"/>
-                <div>4</div>
+                <div>2</div>
               </Link>
           </div>
       </div>

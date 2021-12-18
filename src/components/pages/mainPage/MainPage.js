@@ -1,5 +1,5 @@
 import {HeaderBanner, HeaderPromo} from '../../header/Header.js';
-import Slider from '../../slider/Slider.js';
+import Carousel from '../../carousel/Carousel.js';
 import Category from '../../category/Category.js';
 import Products from '../../products/Products.js';
 import Newseller from '../../newseller/Newseller.js';
@@ -12,7 +12,7 @@ const MainPage = () => {
         <HeaderBanner />
         <HeaderPromo />
       </header>
-      <Slider />
+      <Carousel />
       <Category />
       <Products />
       <Newseller />

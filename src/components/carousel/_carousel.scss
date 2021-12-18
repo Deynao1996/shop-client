@@ -1,19 +1,18 @@
 .slider {
   position: relative;
-  width: 100%;
   height: 100vh;
   &__item {
     height: 100%;
     background-color: #fbf0f4;
-    display: flex;
+    display: flex !important;
     justify-content: space-between;
     align-items: center;
     padding-right: 50px;
     &-img {
-      height: 100%;
+      height: 100vh;
       flex: 1;
       img {
-        height: 80%;
+        height: 100%;
       }
     }
     &-content {
@@ -73,5 +72,24 @@
   }
   &__left {
     left: 2%;
+  }
+}
+
+.slick {
+  &-track {
+    display: flex;
+  }
+  &-slide {
+    display: flex;
+    height: auto;
+    align-items: center;
+    justify-content: center;
+  }
+  &-list {
+    overflow: hidden;
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
   }
 }

@@ -29,9 +29,11 @@
       color: black;
     }
     &-links {
-      a {
+      span {
         margin: 0px 10px;
         color: black;
+        text-decoration: underline;
+        cursor: pointer;
       }
     }
     &-checkout {
@@ -107,6 +109,16 @@
     &-price {
       font-size: 30px;
       font-weight: 200;
+    }
+    &_add {
+      padding: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background-color: black;
+      color: white;
+      border: none;
+      margin-bottom: 20px;
     }
   }
   &__order {
