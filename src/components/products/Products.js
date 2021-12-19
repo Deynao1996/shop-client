@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 import useHttp from '../../hooks/http.hook.js';
-import Spinner from '../spinner/Spinner.js'
+import Spinner from '../spinner/Spinner.js';
 
 import {FaSearch} from 'react-icons/fa';
 import {HiShoppingCart} from "react-icons/hi";
@@ -64,7 +64,7 @@ const Products = ({category, currentFilter}) => {
                 </div>
                 <div className="products__item_outer">
                     <div className="products__item_outer-links">
-                        <Link to="/products/123">
+                        <Link to={`/products/${id}`}>
                           <FaSearch />
                         </Link>
                         <Link to="/cart">
