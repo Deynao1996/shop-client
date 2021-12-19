@@ -1,22 +1,28 @@
 import './_sort.scss';
 
-const Sort = ({category}) => {
+const Sort = ({category, setCurrentFilter}) => {
   return (
     <section className="sort">
         <h6 className="sort__title">{category}</h6>
         <div className="sort__filters">
             <div className="sort__product">
                 <span>Filter Products:</span>
-                <select name="size" className="sort__size">
-                  <option disabled="disabled">Size</option>
-                  <option value="xs">XS</option>
-                  <option value="s">S</option>
-                  <option value="m">M</option>
-                  <option value="l">L</option>
-                  <option value="hl">HL</option>
+                <select
+                  name="size"
+                  className="sort__size"
+                  onChange={(e) => setCurrentFilter(currentFilter => ({...currentFilter, size: e.target.value}))}>
+                    <option disabled="disabled">Size</option>
+                    <option value="all">All</option>
+                    <option value="xs">XS</option>
+                    <option value="s">S</option>
+                    <option value="m">M</option>
+                    <option value="l">L</option>
+                    <option value="hl">HL</option>
                 </select>
             </div>
-            <div className="sort__price">
+            <div
+              className="sort__price"
+              onChange={(e) => setCurrentFilter(currentFilter => ({...currentFilter, price: e.target.value}))}>
                 <span>Sort Products:</span>
                 <select name="price" className="sort__new">
                   <option value="newest">Newest</option>

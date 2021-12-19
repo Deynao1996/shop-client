@@ -10,10 +10,33 @@ import {AiFillHeart} from "react-icons/ai";
 
 import './_products.scss';
 
-const Products = ({category}) => {
+const Products = ({category, currentFilter}) => {
 
   const [products, setProducts] = useState([]);
   const {request, itemLoadingStatus} = useHttp();
+
+  function filterBySortPanel(arr, currentFilter) {
+    if (!currentFilter) {
+      return arr;
+    }
+
+    const filtredArray = arr.filter(item => {
+      if (currentFilter.size === 'all') {
+        return arr;
+      }
+      return item.size === currentFilter.size;
+    });
+
+    return filtredArray.sort((a, b) => {
+      if (currentFilter.price === 'desc') {
+        return a.price - b.price;
+      }
+      if (currentFilter.price === 'asc') {
+        return b.price - a.price;
+      }
+      return 0;
+    })
+  }
 
   function filterByCategory(arr, filterName) {
     return arr.filter(item => {
@@ -29,7 +52,7 @@ const Products = ({category}) => {
           return <h5 className="products__status">There are no products now</h5>
       }
 
-      return arr.map(({id, src}) => {
+      return arr.map(({id, src, price}) => {
           return (
             <div
               className="products__item"
@@ -57,9 +80,13 @@ const Products = ({category}) => {
       })
   }
 
+  function getAllFiltredProducts(arr) {
+    return renderProductsList(filterByCategory(filterBySortPanel(products, currentFilter), category));
+  }
+
   useEffect(() => {
     request('http://localhost:3001/products')
-      .then(setProducts)
+      .then(res => setProducts(res.reverse()))
   }, []);
 
   if (itemLoadingStatus === "loading") {
@@ -68,7 +95,7 @@ const Products = ({category}) => {
       return <h5 className="products__status">Loading error</h5>
   }
 
-  const elements = renderProductsList(filterByCategory(products, category));
+  const elements = getAllFiltredProducts(products);
 
   return (
     <section className="products">
