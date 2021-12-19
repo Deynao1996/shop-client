@@ -10,7 +10,7 @@ const Category = () => {
               <img src="https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="bg"/>
                 <div className="category__item_content">
                     <div className="category__item_content-title">SHIRT STYLE!</div>
-                    <Link to="/products" className="category__item_content-link">SHOP NOW</Link>
+                    <Link to="/products/summer" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
 
@@ -18,7 +18,7 @@ const Category = () => {
               <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="bg"/>
                 <div className="category__item_content">
                     <div className="category__item_content-title">LOUNGEWEAR LOVE</div>
-                    <Link to="/products" className="category__item_content-link">SHOP NOW</Link>
+                    <Link to="/products/loungewear" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
 
@@ -26,7 +26,7 @@ const Category = () => {
               <img src="https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="bg"/>
                 <div className="category__item_content">
                     <div className="category__item_content-title">LIGHT JACKETS</div>
-                    <Link to="/products" className="category__item_content-link">SHOP NOW</Link>
+                    <Link to="/products/autumn" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
         </div>

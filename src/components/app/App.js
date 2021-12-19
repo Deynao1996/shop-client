@@ -12,7 +12,9 @@ const  App = () => {
   return (
     <Routes>
       <Route path="/" element={<MainPage />} />
-      <Route path="/products" element={<ProductsListPage />} />
+      <Route path="/products/summer" element={<ProductsListPage category="summer sale"/>} />
+      <Route path="/products/autumn" element={<ProductsListPage category="autum collection"/>} />
+      <Route path="/products/loungewear" element={<ProductsListPage category="loungewear lowe"/>} />
       <Route path="/products/:id" element={<ProductPage />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/register" element={<RegisterPage />} />

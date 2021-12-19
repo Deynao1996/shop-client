@@ -3,15 +3,17 @@ import Footer from '../../footer/Footer.js';
 import Products from '../../products/Products.js';
 import Sort from '../../sort/Sort.js';
 
-const ProductsListPage = () => {
+const ProductsListPage = ({category}) => {
   return (
     <>
       <header className="header">
         <HeaderPromo />
         <HeaderBanner />
       </header>
-      <Sort />
-      <Products />
+      <Sort
+        category={category}/>
+      <Products
+        category={category}/>
       <Footer />
     </>
   )

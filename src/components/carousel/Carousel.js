@@ -43,30 +43,30 @@ const Carousel = () => {
 
   return (
     <Slider {...settings} >
-        <div className="slider__item test" style={{padding: '20px', margin: '121212'}}>
-            <div className="slider__item-img"><img src="https://i.ibb.co/DG69bQ4/2.png" alt="girl"/></div>
+        <div className="slider__item test">
+            <div className="slider__item-img"><img src="https://www.pngall.com/wp-content/uploads/2016/04/Girl-Transparent.png" alt="girl"/></div>
             <div className="slider__item-content">
                 <h1>AUTUMN COLLECTION</h1>
                 <span>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</span>
-                <Link to="/products" className="slider__btn">SHOW NOW</Link>
+                <Link to="/products/autumn" className="slider__btn">SHOW NOW</Link>
             </div>
         </div>
 
-        <div className="slider__item test" style={{padding: '20px'}}>
-            <div className="slider__item-img"><img src="https://i.ibb.co/DG69bQ4/2.png" alt="girl"/></div>
+        <div className="slider__item test">
+            <div className="slider__item-img"><img src="https://i.ibb.co/cXFnLLV/3.png" alt="girl"/></div>
             <div className="slider__item-content">
-                <h1>AUTUMN COLLECTION</h1>
+                <h1>LOUNGEWEAR LOVE</h1>
                 <span>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</span>
-                <Link to="/products" className="slider__btn">SHOW NOW</Link>
+                <Link to="/products/loungewear" className="slider__btn">SHOW NOW</Link>
             </div>
         </div>
 
-        <div className="slider__item test" style={{padding: '20px'}}>
+        <div className="slider__item test">
             <div className="slider__item-img"><img src="https://i.ibb.co/DG69bQ4/2.png" alt="girl"/></div>
             <div className="slider__item-content">
-                <h1>AUTUMN COLLECTION</h1>
+                <h1>SUMMER SALE</h1>
                 <span>DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.</span>
-                <Link to="/products" className="slider__btn">SHOW NOW</Link>
+                <Link to="/products/summer" className="slider__btn">SHOW NOW</Link>
             </div>
         </div>
     </Slider>
