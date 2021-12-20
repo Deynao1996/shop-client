@@ -98,6 +98,7 @@ const Products = ({category, currentFilter}) => {
 
   const elements = getAllFiltredProducts(products);
 
+
   return (
     <section className="products">
       <div className="products__items">

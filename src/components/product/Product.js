@@ -48,15 +48,29 @@ const Product = () => {
   }
 
   const onSumSelected = (n) => {
+    const value = selectedProductOptions.currentSum + n;
+    if (value < 1 || value > 999) {
+      return;
+    }
     setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentSum: selectedProductOptions.currentSum + n}
+      return {...selectedProductOptions, currentSum: value}
     })
   }
 
   const onHandlerSumSelected = (e) => {
+    const value = +e.target.value.replace(/\D/g, "");
+    if (value > 999) {
+      return;
+    }
     setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentSum: +e.target.value.replace(/\D/g, "") < 1 ? 1 : +e.target.value.replace(/\D/g, "")}
+      return {...selectedProductOptions, currentSum: value}
     })
+  }
+
+  const onInputBlur = () => {
+    if (selectedProductOptions.currentSum === 0) {
+      setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
+    }
   }
 
   function renderOptionsList(arr) {
@@ -89,7 +103,7 @@ const Product = () => {
     request('http://localhost:3001/products')
       .then(res => getProductById(res, id))
       // eslint-disable-next-line
-  }, [id]);
+  }, [id])
 
   if (itemLoadingStatus === "loading") {
       return <Spinner/>;
@@ -98,8 +112,6 @@ const Product = () => {
   }
 
   const {src, price, title, description, optionSizes, optionColors} = selectedProduct;
-  const optionsList = renderOptionsList(optionSizes);
-  const colorsList = renderColorsList(optionColors);
 
 
   return (
@@ -114,7 +126,7 @@ const Product = () => {
             <div className="product__features">
                 <div className="product__color">
                   <span>Color</span>
-                  {colorsList}
+                    {renderColorsList(optionColors)}
                 </div>
                 <div className="product__size">
                   <span>Size</span>
@@ -122,7 +134,7 @@ const Product = () => {
                     name="select"
                     value={selectedProductOptions.currentSize || "0"}
                     onChange={(e) => onSizeSelected(e)}>
-                      {optionsList}
+                      {renderOptionsList(optionSizes)}
                   </select>
                 </div>
             </div>
@@ -138,7 +150,8 @@ const Product = () => {
                       name="sum"
                       className="product__sum"
                       value={selectedProductOptions.currentSum}
-                      onChange={(e) => onHandlerSumSelected(e)}/>
+                      onChange={(e) => onHandlerSumSelected(e)}
+                      onBlur={() => onInputBlur()}/>
                     <div
                       className="product__plus"
                       onClick={() => onSumSelected(1)}>

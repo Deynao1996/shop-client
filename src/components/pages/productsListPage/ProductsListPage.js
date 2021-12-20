@@ -11,6 +11,7 @@ const ProductsListPage = ({category}) => {
     size: 'all',
     price: 'newest'
   })
+  
 
   return (
     <>
