@@ -12,23 +12,83 @@ const Product = () => {
   const {request, itemLoadingStatus} = useHttp();
 
   const [selectedProduct, setSelectedProduct] = useState({});
-  const [productFeatures, setProductFeatures] = useState({
-    color: 'blue',
-    size: 'xs',
-    sum: 1
-  });
+  const [selectedProductOptions, setSelectedProductOptions] = useState({
+    currentId: null,
+    currentSize: null,
+    currentColor: null,
+    currentSum: 1
+  })
 
   const getProductById = (arr, id) => {
     arr.forEach(item => {
       if (item.id === id) {
         setSelectedProduct(item);
+        setSelectedProductOptions(({currentId, currentSize, currentColor, currentSum}) => {
+          return {
+            currentId: id,
+            currentSize: item.optionSizes[0],
+            currentColor: item.optionColors[0],
+            currentSum: currentSum
+          }
+        });
       }
     });
-  };
+  }
+
+  const onSizeSelected = (e) => {
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentSize: e.target.value}
+    })
+  }
+
+  const onColorSelected = (colorName) => {
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentColor: colorName}
+    })
+  }
+
+  const onSumSelected = (n) => {
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentSum: selectedProductOptions.currentSum + n}
+    })
+  }
+
+  const onHandlerSumSelected = (e) => {
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentSum: +e.target.value.replace(/\D/g, "") < 1 ? 1 : +e.target.value.replace(/\D/g, "")}
+    })
+  }
+
+  function renderOptionsList(arr) {
+    if (!arr || arr.length === 0) {
+      return <option value="0">No options yet</option>
+    }
+    return arr.map((item, i) => {
+      return <option
+        key={i}
+        value={item}>
+          {item}
+        </option>
+    })
+  }
+
+  function renderColorsList(arr) {
+    if (!arr || arr.length === 0) {
+      return <span>No colors yet</span>
+    }
+    return arr.map((colorName, i) => {
+      return <div
+        style={{backgroundColor: colorName}}
+        key={i}
+        className={`product__circle ${selectedProductOptions.currentColor === colorName ? 'product__circle_active' : ''}`}
+        onClick={() => onColorSelected(colorName)}></div>
+    })
+  }
 
   useEffect(() => {
     request('http://localhost:3001/products')
-      .then(res => getProductById(res, id));
+      .then(res => getProductById(res, id))
+      // eslint-disable-next-line
   }, [id]);
 
   if (itemLoadingStatus === "loading") {
@@ -37,8 +97,10 @@ const Product = () => {
       return <h5 className="products__status">Loading error</h5>
   }
 
-  const {src, price, title, description} = selectedProduct;
-  const {color, size, sum} = productFeatures;
+  const {src, price, title, description, optionSizes, optionColors} = selectedProduct;
+  const optionsList = renderOptionsList(optionSizes);
+  const colorsList = renderColorsList(optionColors);
+
 
   return (
     <section className="product">
@@ -52,26 +114,36 @@ const Product = () => {
             <div className="product__features">
                 <div className="product__color">
                   <span>Color</span>
-                  <div style={{backgroundColor: 'darkblue'}} className="product__circle product__circle_active"></div>
-                  <div style={{backgroundColor: 'black'}} className="product__circle"></div>
-                  <div style={{backgroundColor: 'gray'}} className="product__circle"></div>
+                  {colorsList}
                 </div>
                 <div className="product__size">
                   <span>Size</span>
-                  <select name="select">
-                    <option value={size}>XS</option>
-                    <option value="s">S</option>
-                    <option value="m">M</option>
-                    <option value="l">L</option>
-                    <option value="xl">XL</option>
+                  <select
+                    name="select"
+                    value={selectedProductOptions.currentSize || "0"}
+                    onChange={(e) => onSizeSelected(e)}>
+                      {optionsList}
                   </select>
                 </div>
             </div>
             <div className="product__send">
                 <div className="product__calc">
-                    <div className="product__minus">&#8722;</div>
-                    <input type="text" name="sum" className="product__sum" defaultValue={productFeatures.sum}/>
-                    <div className="product__plus">&#43;</div>
+                    <div
+                      className="product__minus"
+                      onClick={() => onSumSelected(-1)}>
+                        &#8722;
+                    </div>
+                    <input
+                      type="text"
+                      name="sum"
+                      className="product__sum"
+                      value={selectedProductOptions.currentSum}
+                      onChange={(e) => onHandlerSumSelected(e)}/>
+                    <div
+                      className="product__plus"
+                      onClick={() => onSumSelected(1)}>
+                        &#43;
+                    </div>
                 </div>
                 <button className="product__submit">Add to cart</button>
             </div>

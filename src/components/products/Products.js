@@ -86,7 +86,8 @@ const Products = ({category, currentFilter}) => {
 
   useEffect(() => {
     request('http://localhost:3001/products')
-      .then(res => setProducts(res.reverse()))
+      .then(res => setProducts(res.reverse()));
+      // eslint-disable-next-line
   }, []);
 
   if (itemLoadingStatus === "loading") {
