@@ -13,7 +13,7 @@ import './_products.scss';
 
 const Products = ({category, currentFilter}) => {
 
-  const {setCartItems} = useCart();
+  const {setCartItems, cartItems} = useCart();
 
   const [products, setProducts] = useState([]);
   const {request, itemLoadingStatus} = useHttp();
@@ -50,6 +50,18 @@ const Products = ({category, currentFilter}) => {
     })
   }
 
+  function checkItemExist(id, arr, n) {
+    setCartItems(cartItems => {
+      return arr.map(item => {
+        if (item.currentId === id) {
+          return {...item, currentSum: item.currentSum + n}
+        } else {
+          return item;
+        }
+      });
+    });
+  }
+
   function addProductToCart(id, src, price, size, title, optionColors) {
     const product = {
       currentId: id,
@@ -60,8 +72,16 @@ const Products = ({category, currentFilter}) => {
       currentPrice: price,
       currentTitle: title
     }
+
+    const findItem = cartItems.find(item => item.currentId === id);
+    if (findItem) {
+      checkItemExist(id, cartItems, 1);
+      return;
+    }
+
     setCartItems(cartItems => ([...cartItems, product]));
   }
+
 
   function renderProductsList(arr) {
       if (arr.length === 0) {

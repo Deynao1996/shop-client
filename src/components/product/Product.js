@@ -106,8 +106,27 @@ const Product = () => {
     })
   }
 
+  function checkItemExist(id, arr, n) {
+    setCartItems(cartItems => {
+      return arr.map(item => {
+        if (item.currentId === id) {
+          return {...item, currentSum: item.currentSum + n}
+        } else {
+          return item;
+        }
+      });
+    });
+  }
+
   function onSendProduct() {
+    const findItem = cartItems.find(item => item.currentId === selectedProductOptions.currentId);
+    if (findItem) {
+      checkItemExist(selectedProductOptions.currentId, cartItems, selectedProductOptions.currentSum);
+      return;
+    }
+
     setCartItems(cartItems => ([...cartItems, selectedProductOptions]));
+    setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
   }
 
   useEffect(() => {
