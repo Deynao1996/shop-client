@@ -2,6 +2,7 @@ import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 import useHttp from '../../hooks/http.hook.js';
+import {useCart} from '../../contexts/CartContext.js';
 import Spinner from '../spinner/Spinner.js';
 
 import {FaSearch} from 'react-icons/fa';
@@ -11,6 +12,8 @@ import {AiFillHeart} from "react-icons/ai";
 import './_products.scss';
 
 const Products = ({category, currentFilter}) => {
+
+  const {setCartItems} = useCart();
 
   const [products, setProducts] = useState([]);
   const {request, itemLoadingStatus} = useHttp();
@@ -47,12 +50,25 @@ const Products = ({category, currentFilter}) => {
     })
   }
 
+  function addProductToCart(id, src, price, size, title, optionColors) {
+    const product = {
+      currentId: id,
+      currentSize: size,
+      currentColor: optionColors[0] || null,
+      currentSum: 1,
+      currentSrc: src,
+      currentPrice: price,
+      currentTitle: title
+    }
+    setCartItems(cartItems => ([...cartItems, product]));
+  }
+
   function renderProductsList(arr) {
       if (arr.length === 0) {
           return <h5 className="products__status">There are no products now</h5>
       }
 
-      return arr.map(({id, src, price}) => {
+      return arr.map(({id, src, price, size, title, optionColors}) => {
           return (
             <div
               className="products__item"
@@ -67,12 +83,11 @@ const Products = ({category, currentFilter}) => {
                         <Link to={`/products/${id}`}>
                           <FaSearch />
                         </Link>
-                        <Link to="/cart">
-                          <HiShoppingCart />
-                        </Link>
-                        <a href="#">
-                          <AiFillHeart />
-                        </a>
+                        <button
+                          onClick={() => addProductToCart(id, src, price, size, title, optionColors)}>
+                            <HiShoppingCart />
+                        </button>
+                        <button><AiFillHeart /></button>
                     </div>
                 </div>
             </div>

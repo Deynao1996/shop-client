@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {useCart} from '../../contexts/CartContext.js';
 
 import {FaSearch} from 'react-icons/fa';
 import {HiShoppingCart} from "react-icons/hi";
@@ -10,6 +11,8 @@ const HeaderBanner = () => {
 };
 
 const HeaderPromo = () => {
+  const {sum} = useCart();
+
   return (
     <>
       <div className="header__promo">
@@ -26,7 +29,7 @@ const HeaderPromo = () => {
               <Link to="/signin" className="header__promo_act-signin">Sign in</Link>
               <Link to="/cart" className="header__promo_act-cart">
                 <HiShoppingCart size="1.2em"/>
-                <div>2</div>
+                  {sum ? <div>{sum}</div> : null}
               </Link>
           </div>
       </div>

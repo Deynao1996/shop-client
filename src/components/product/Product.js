@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import {useParams} from "react-router-dom";
 
 import useHttp from '../../hooks/http.hook.js';
+import {useCart} from '../../contexts/CartContext.js';
 
 import Spinner from '../spinner/Spinner.js';
 
@@ -9,6 +10,7 @@ import './_product.scss';
 
 const Product = () => {
   const {id} = useParams();
+  const {setCartItems, cartItems} = useCart();
   const {request, itemLoadingStatus} = useHttp();
 
   const [selectedProduct, setSelectedProduct] = useState({});
@@ -16,7 +18,10 @@ const Product = () => {
     currentId: null,
     currentSize: null,
     currentColor: null,
-    currentSum: 1
+    currentSum: 1,
+    currentSrc: null,
+    currentPrice: null,
+    currentTitle: null
   })
 
   const getProductById = (arr, id) => {
@@ -28,33 +33,37 @@ const Product = () => {
             currentId: id,
             currentSize: item.optionSizes[0],
             currentColor: item.optionColors[0],
-            currentSum: currentSum
+            currentSum: currentSum,
+            currentSrc: item.src,
+            currentPrice: item.price,
+            currentTitle: item.title
           }
         });
       }
     });
   }
 
+  const _setOption = (e, point, propName) => {
+    const value = point ? point : e.target.value;
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, [propName]: value}
+    })
+  }
+
   const onSizeSelected = (e) => {
-    setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentSize: e.target.value}
-    })
+    _setOption(e, false, 'currentSize');
   }
 
-  const onColorSelected = (colorName) => {
-    setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentColor: colorName}
-    })
+  const onColorSelected = (e, colorName) => {
+    _setOption(e, colorName, 'currentColor');
   }
 
-  const onSumSelected = (n) => {
+  const onSumSelected = (e, n) => {
     const value = selectedProductOptions.currentSum + n;
     if (value < 1 || value > 999) {
       return;
     }
-    setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentSum: value}
-    })
+    _setOption(e, value, 'currentSum');
   }
 
   const onHandlerSumSelected = (e) => {
@@ -62,13 +71,11 @@ const Product = () => {
     if (value > 999) {
       return;
     }
-    setSelectedProductOptions(selectedProductOptions => {
-      return {...selectedProductOptions, currentSum: value}
-    })
+    _setOption(e, value, 'currentSum');
   }
 
   const onInputBlur = () => {
-    if (selectedProductOptions.currentSum === 0) {
+    if (typeof selectedProductOptions.currentSum === "string") {
       setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
     }
   }
@@ -95,8 +102,12 @@ const Product = () => {
         style={{backgroundColor: colorName}}
         key={i}
         className={`product__circle ${selectedProductOptions.currentColor === colorName ? 'product__circle_active' : ''}`}
-        onClick={() => onColorSelected(colorName)}></div>
+        onClick={(e) => onColorSelected(e, colorName)}></div>
     })
+  }
+
+  function onSendProduct() {
+    setCartItems(cartItems => ([...cartItems, selectedProductOptions]));
   }
 
   useEffect(() => {
@@ -112,6 +123,8 @@ const Product = () => {
   }
 
   const {src, price, title, description, optionSizes, optionColors} = selectedProduct;
+  const optionsListItems = renderOptionsList(optionSizes);
+  const colorsListItems = renderColorsList(optionColors);
 
 
   return (
@@ -126,7 +139,7 @@ const Product = () => {
             <div className="product__features">
                 <div className="product__color">
                   <span>Color</span>
-                    {renderColorsList(optionColors)}
+                    {colorsListItems}
                 </div>
                 <div className="product__size">
                   <span>Size</span>
@@ -134,7 +147,7 @@ const Product = () => {
                     name="select"
                     value={selectedProductOptions.currentSize || "0"}
                     onChange={(e) => onSizeSelected(e)}>
-                      {renderOptionsList(optionSizes)}
+                      {optionsListItems}
                   </select>
                 </div>
             </div>
@@ -142,7 +155,7 @@ const Product = () => {
                 <div className="product__calc">
                     <div
                       className="product__minus"
-                      onClick={() => onSumSelected(-1)}>
+                      onClick={(e) => onSumSelected(e, -1)}>
                         &#8722;
                     </div>
                     <input
@@ -154,11 +167,15 @@ const Product = () => {
                       onBlur={() => onInputBlur()}/>
                     <div
                       className="product__plus"
-                      onClick={() => onSumSelected(1)}>
+                      onClick={(e) => onSumSelected(e, 1)}>
                         &#43;
                     </div>
                 </div>
-                <button className="product__submit">Add to cart</button>
+                <button
+                  className="product__submit"
+                  onClick={onSendProduct}>
+                    Add to cart
+                </button>
             </div>
         </div>
     </section>

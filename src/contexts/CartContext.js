@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 
 const CartContext = React.createContext();
 
@@ -7,8 +7,28 @@ export const useCart = () => {
 }
 
 export const CartProvider = ({children}) => {
+  const [cartItems, setCartItems] = useState([]);
+  let sum = 0;
+
+  function renderSumCartItems() {
+    if (cartItems.length === 0) {
+      return
+    }
+
+    cartItems.forEach(({currentSum}) => {
+      sum += currentSum;
+    });
+
+    if (sum > 999) {
+      sum = 999
+    }
+  }
+  renderSumCartItems();
+
   const value = {
-    test: '1'
+    cartItems,
+    setCartItems,
+    sum
   }
 
 
