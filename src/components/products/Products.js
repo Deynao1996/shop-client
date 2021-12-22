@@ -50,10 +50,10 @@ const Products = ({category, currentFilter}) => {
     })
   }
 
-  function checkItemExist(id, arr, n) {
+  function addExistedProductToCart(targetId, products, n) {
     setCartItems(cartItems => {
-      return arr.map(item => {
-        if (item.currentId === id) {
+      return products.map(item => {
+        if (item.currentId === targetId) {
           return {...item, currentSum: item.currentSum + n}
         } else {
           return item;
@@ -75,7 +75,7 @@ const Products = ({category, currentFilter}) => {
 
     const findItem = cartItems.find(item => item.currentId === id);
     if (findItem) {
-      checkItemExist(id, cartItems, 1);
+      addExistedProductToCart(id, cartItems, 1);
       return;
     }
 
@@ -89,10 +89,13 @@ const Products = ({category, currentFilter}) => {
       }
 
       return arr.map(({id, src, price, size, title, optionColors}) => {
+
+        const optionsId = id + size + optionColors[0];
+
           return (
             <div
               className="products__item"
-              key={id}>
+              key={optionsId}>
                 <div className="products__item_inner">
                     <div className="products__item_inner-circle">
                           <img src={src} alt="product"/>
@@ -104,7 +107,7 @@ const Products = ({category, currentFilter}) => {
                           <FaSearch />
                         </Link>
                         <button
-                          onClick={() => addProductToCart(id, src, price, size, title, optionColors)}>
+                          onClick={() => addProductToCart(optionsId, src, price, size, title, optionColors)}>
                             <HiShoppingCart />
                         </button>
                         <button><AiFillHeart /></button>

@@ -29,8 +29,9 @@ const Product = () => {
       if (item.id === id) {
         setSelectedProduct(item);
         setSelectedProductOptions(({currentId, currentSize, currentColor, currentSum}) => {
+          const optionCurrentId = id + item.optionSizes[0] + item.optionColors[0];
           return {
-            currentId: id,
+            currentId: optionCurrentId,
             currentSize: item.optionSizes[0],
             currentColor: item.optionColors[0],
             currentSum: currentSum,
@@ -51,11 +52,19 @@ const Product = () => {
   }
 
   const onSizeSelected = (e) => {
-    _setOption(e, false, 'currentSize');
+    const value = e.target.value;
+    const newId = selectedProductOptions.currentId.replace(/\D/g, "") + value + selectedProductOptions.currentColor;
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentSize: value, currentId: newId}
+    })
   }
 
   const onColorSelected = (e, colorName) => {
-    _setOption(e, colorName, 'currentColor');
+    const value = colorName;
+    const newId = selectedProductOptions.currentId.replace(/\D/g, "") + selectedProductOptions.currentSize + value;
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions, currentColor: value, currentId: newId}
+    })
   }
 
   const onSumSelected = (e, n) => {
@@ -106,7 +115,7 @@ const Product = () => {
     })
   }
 
-  function checkItemExist(id, arr, n) {
+  function addExistedProductToCart(id, arr, n) {
     setCartItems(cartItems => {
       return arr.map(item => {
         if (item.currentId === id) {
@@ -118,15 +127,25 @@ const Product = () => {
     });
   }
 
+  function resetProductOptions() {
+    setSelectedProductOptions(selectedProductOptions => {
+      return {...selectedProductOptions,
+        currentSum: 1,
+        currentSize: selectedProduct.optionSizes[0],
+        currentColor: selectedProduct.optionColors[0],
+        }
+    })
+  }
+
   function onSendProduct() {
     const findItem = cartItems.find(item => item.currentId === selectedProductOptions.currentId);
     if (findItem) {
-      checkItemExist(selectedProductOptions.currentId, cartItems, selectedProductOptions.currentSum);
+      addExistedProductToCart(selectedProductOptions.currentId, cartItems, selectedProductOptions.currentSum);
       return;
     }
 
     setCartItems(cartItems => ([...cartItems, selectedProductOptions]));
-    setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
+    resetProductOptions();
   }
 
   useEffect(() => {

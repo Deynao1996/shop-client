@@ -66,6 +66,7 @@
     display: flex;
     justify-content: space-between;
     height: 215px;
+    position: relative;
     &-img {
       flex: 0.5;
       img {
@@ -93,6 +94,17 @@
       span {
         font-weight: normal;
         text-transform: uppercase;
+      }
+    }
+    &-cross {
+      position: absolute;
+      top: 5%;
+      right: 3%;
+      border: none;
+      background-color: #fff;
+      svg {
+        width: 1.2em;
+        cursor: pointer;
       }
     }
     &-circle {

@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 
 import {useCart} from '../../contexts/CartContext.js';
 
+import {ImCross} from "react-icons/im";
 import './_cart.scss'
 
 const CartWishList = () => {
@@ -54,13 +55,36 @@ const CartWishList = () => {
 };
 
 const CartOrderList = () => {
-  const {cartItems} = useCart();
+  const {cartItems, setCartItems} = useCart();
+
+  const deleteProductFromCart = (id) => {
+    setCartItems(cartItems => cartItems.filter(item => item.currentId !== id));
+  };
+
+  const onChangeCurrentSum = (id, currentSum, n) => {
+    const value = currentSum + n;
+    if (value < 1 || value > 999) {
+      return;
+    }
+    setCartItems(cartItems => {
+      return cartItems.map(item => {
+
+        if (item.currentId === id) {
+          return {...item, currentSum: value}
+        } else {
+          return item;
+        }
+      })
+    });
+  }
 
   function renderCartProductsList(arr) {
     if (arr.length === 0) {
       return <h5>Your cart is empty now</h5>
     }
     return arr.map(({currentId, currentSrc, currentTitle, currentColor, currentSize, currentPrice, currentSum}, i) => {
+      let totalItemPrice = currentPrice * +currentSum;
+
       return (
         <React.Fragment key={currentId}>
           <div
@@ -75,12 +99,17 @@ const CartOrderList = () => {
               </div>
               <div className="cart__item-features">
                   <div className="cart__item-calc">
-                      <span>&#43;</span>
+                      <span onClick={() => onChangeCurrentSum(currentId, currentSum, +1)}>&#43;</span>
                       <div>{currentSum}</div>
-                      <span>&#8722;</span>
+                      <span onClick={() => onChangeCurrentSum(currentId, currentSum, -1)}>&#8722;</span>
                   </div>
-                  <div className="cart__item-price">$ {currentPrice}</div>
+                  <div className="cart__item-price">$ {totalItemPrice}</div>
               </div>
+              <button
+                className="cart__item-cross"
+                onClick={() => deleteProductFromCart(currentId)}>
+                  <ImCross />
+              </button>
           </div>
           {i === arr.length - 1 ? null : <hr />}
         </React.Fragment>
@@ -92,7 +121,7 @@ const CartOrderList = () => {
     let totalPrice = 0;
 
     arr.forEach(item => {
-      totalPrice += +item.currentPrice;
+      totalPrice += +item.currentPrice * item.currentSum;
     });
     return totalPrice;
   }
