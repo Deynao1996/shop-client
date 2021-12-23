@@ -8,7 +8,26 @@ export const useCart = () => {
 
 export const CartProvider = ({children}) => {
   const [cartItems, setCartItems] = useState([]);
+  const [wishItems, setWishItems] = useState([]);
+  const [lickedProductsId, setLickedProductsId] = useState([]);
   let sum = 0;
+console.log(lickedProductsId);
+  const addExistedProductToCart = (items, id, n) => {
+    const findItem = items.find(item => item.currentId === id);
+    if (findItem) {
+      setCartItems(cartItems => {
+        return items.map(item => {
+          if (item.currentId === id) {
+            return {...item, currentSum: item.currentSum + n}
+          } else {
+            return item;
+          }
+        });
+      });
+      return findItem;
+    }
+    return findItem;
+  }
 
   function renderSumCartItems() {
     if (cartItems.length === 0) {
@@ -28,7 +47,12 @@ export const CartProvider = ({children}) => {
   const value = {
     cartItems,
     setCartItems,
-    sum
+    addExistedProductToCart,
+    sum,
+    wishItems,
+    setWishItems,
+    lickedProductsId,
+    setLickedProductsId
   }
 
 

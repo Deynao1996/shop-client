@@ -2,54 +2,54 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 
 import {useCart} from '../../contexts/CartContext.js';
+import {onSendItem} from '../products/Products.js';
 
 import {ImCross} from "react-icons/im";
-import './_cart.scss'
+import './_cart.scss';
 
 const CartWishList = () => {
+  const {wishItems, setWishItems, cartItems, setCartItems, addExistedProductToCart, setLickedProductsId} = useCart();
+
+  const deleteWishItem = (id) => {
+    setWishItems(wishItems => wishItems.filter(item => item.currentId !== id));
+    setLickedProductsId(lickedProductsId => lickedProductsId.filter(item => item !== id));
+  };
+
+  function renderWishItemsList(arr) {
+    if (arr.length === 0) {
+      return <h5>Your wishlist is empty now</h5>
+    }
+
+    return arr.map((props, i) => {
+      return (
+        <View
+          key={props.currentId}
+          i={i}
+          items={arr}
+          {...props}>
+            <div className="cart__item-features">
+                <button
+                  className="cart__item_add"
+                  onClick={() => onSendItem(props.currentId, props.currentSrc, props.currentPrice, props.currentSize, props.currentTitle, props.currentColor, cartItems, setCartItems, addExistedProductToCart)}>
+                    ADD TO CART
+                </button>
+                <div className="cart__item-price">$ {props.currentPrice}</div>
+            </div>
+            <button
+              className="cart__item-cross"
+              onClick={() => deleteWishItem(props.currentId)}>
+                <ImCross />
+            </button>
+        </View>
+      )
+    })
+  }
+
+  const wishItemsList = renderWishItemsList(wishItems);
+
   return (
     <div className="cart__items">
-        <div className="cart__item">
-            <div className="cart__item-img"><img src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" alt="product"/></div>
-            <div className="cart__item-content">
-                <div className="cart__item-name">Product: <span>JESSIE THUNDER SHOES</span></div>
-                <div className="cart__item-id">ID: <span>93813718293</span></div>
-                <div className="cart__item-circle"></div>
-                <div className="cart__item-size">Size: <span>37.5</span></div>
-            </div>
-            <div className="cart__item-features">
-                <button className="cart__item_add">ADD TO CART</button>
-                <div className="cart__item-price">$ 30</div>
-            </div>
-        </div>
-        <hr/>
-        <div className="cart__item">
-            <div className="cart__item-img"><img src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" alt="product"/></div>
-            <div className="cart__item-content">
-                <div className="cart__item-name">Product: <span>HAKURA T-SHIRT</span></div>
-                <div className="cart__item-id">ID: <span>93813718293</span></div>
-                <div className="cart__item-circle"></div>
-                <div className="cart__item-size">Size: <span>M</span></div>
-            </div>
-            <div className="cart__item-features">
-                <button className="cart__item_add">ADD TO CART</button>
-                <div className="cart__item-price">$ 20</div>
-            </div>
-        </div>
-        <hr/>
-        <div className="cart__item">
-            <div className="cart__item-img"><img src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" alt="product"/></div>
-            <div className="cart__item-content">
-                <div className="cart__item-name">Product: <span>JESSIE THUNDER SHOES</span></div>
-                <div className="cart__item-id">ID: <span>93813718293</span></div>
-                <div className="cart__item-circle"></div>
-                <div className="cart__item-size">Size: <span>37.5</span></div>
-            </div>
-            <div className="cart__item-features">
-                <button className="cart__item_add">ADD TO CART</button>
-                <div className="cart__item-price">$ 30</div>
-            </div>
-        </div>
+        {wishItemsList}
     </div>
   )
 };
@@ -82,37 +82,29 @@ const CartOrderList = () => {
     if (arr.length === 0) {
       return <h5>Your cart is empty now</h5>
     }
-    return arr.map(({currentId, currentSrc, currentTitle, currentColor, currentSize, currentPrice, currentSum}, i) => {
-      let totalItemPrice = currentPrice * +currentSum;
+    return arr.map((props, i) => {
+      let totalItemPrice = props.currentPrice * +props.currentSum;
 
       return (
-        <React.Fragment key={currentId}>
-          <div
-            className="cart__item"
-            key={currentId}>
-              <div className="cart__item-img"><img src={currentSrc} alt={currentTitle}/></div>
-              <div className="cart__item-content">
-                  <div className="cart__item-name">Product: <span>{currentTitle}</span></div>
-                  <div className="cart__item-id">ID: <span>{currentId}</span></div>
-                  <div className="cart__item-circle" style={{backgroundColor: `${currentColor}`}}></div>
-                  <div className="cart__item-size">Size: <span>{currentSize}</span></div>
+        <View
+          key={props.currentId}
+          i={i}
+          items={arr}
+          {...props}>
+          <div className="cart__item-features">
+              <div className="cart__item-calc">
+                  <span onClick={() => onChangeCurrentSum(props.currentId, props.currentSum, +1)}>&#43;</span>
+                  <div>{props.currentSum}</div>
+                  <span onClick={() => onChangeCurrentSum(props.currentId, props.currentSum, -1)}>&#8722;</span>
               </div>
-              <div className="cart__item-features">
-                  <div className="cart__item-calc">
-                      <span onClick={() => onChangeCurrentSum(currentId, currentSum, +1)}>&#43;</span>
-                      <div>{currentSum}</div>
-                      <span onClick={() => onChangeCurrentSum(currentId, currentSum, -1)}>&#8722;</span>
-                  </div>
-                  <div className="cart__item-price">$ {totalItemPrice}</div>
-              </div>
-              <button
-                className="cart__item-cross"
-                onClick={() => deleteProductFromCart(currentId)}>
-                  <ImCross />
-              </button>
+              <div className="cart__item-price">$ {totalItemPrice}</div>
           </div>
-          {i === arr.length - 1 ? null : <hr />}
-        </React.Fragment>
+          <button
+            className="cart__item-cross"
+            onClick={() => deleteProductFromCart(props.currentId)}>
+              <ImCross />
+          </button>
+        </View>
       )
     })
   }
@@ -161,7 +153,7 @@ const CartOrderList = () => {
 
 const Cart = () => {
   const [view, setView] = useState('bag');
-  const {sum} = useCart();
+  const {sum, wishItems} = useCart();
 
   return (
     <section className="cart">
@@ -177,17 +169,40 @@ const Cart = () => {
                   <span
                     style={{textDecoration: view === 'bag' ? 'underline' : 'none'}}
                     onClick={() => setView('wishlist')}>
-                      Your Wishlist (3)
+                      Your Wishlist ({wishItems.length})
                   </span>
                 </div>
                 <button className="cart__nav-checkout">CHECKOUT NOW</button>
             </div>
 
             <div className="cart__wrapper">
-              {view === 'bag' ? <CartOrderList /> : <CartWishList />}
+              {view === 'bag' ?
+                <CartOrderList /> :
+                <CartWishList />
+              }
             </div>
     </section>
   )
 };
+
+const View = ({children, i, items, ...props}) => {
+  return (
+    <>
+      <div
+        className="cart__item"
+        key={props.currentId}>
+          <div className="cart__item-img"><img src={props.currentSrc} alt={props.currentTitle}/></div>
+          <div className="cart__item-content">
+              <div className="cart__item-name">Product: <span>{props.currentTitle}</span></div>
+              <div className="cart__item-id">ID: <span>{props.currentId}</span></div>
+              <div className="cart__item-circle"></div>
+              <div className="cart__item-size">Size: <span>{props.currentSize}</span></div>
+          </div>
+            {children}
+      </div>
+      {i === items.length - 1 ? null : <hr />}
+    </>
+  )
+}
 
 export default Cart;

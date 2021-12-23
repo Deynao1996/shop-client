@@ -10,7 +10,7 @@ import './_product.scss';
 
 const Product = () => {
   const {id} = useParams();
-  const {setCartItems, cartItems} = useCart();
+  const {setCartItems, cartItems, addExistedProductToCart} = useCart();
   const {request, itemLoadingStatus} = useHttp();
 
   const [selectedProduct, setSelectedProduct] = useState({});
@@ -115,18 +115,6 @@ const Product = () => {
     })
   }
 
-  function addExistedProductToCart(id, arr, n) {
-    setCartItems(cartItems => {
-      return arr.map(item => {
-        if (item.currentId === id) {
-          return {...item, currentSum: item.currentSum + n}
-        } else {
-          return item;
-        }
-      });
-    });
-  }
-
   function resetProductOptions() {
     setSelectedProductOptions(selectedProductOptions => {
       return {...selectedProductOptions,
@@ -138,14 +126,13 @@ const Product = () => {
   }
 
   function onSendProduct() {
-    const findItem = cartItems.find(item => item.currentId === selectedProductOptions.currentId);
-    if (findItem) {
-      addExistedProductToCart(selectedProductOptions.currentId, cartItems, selectedProductOptions.currentSum);
+    const isProductExist = addExistedProductToCart(cartItems, selectedProductOptions.currentId, selectedProductOptions.currentSum);
+    resetProductOptions();
+    if (isProductExist) {
       return;
     }
 
     setCartItems(cartItems => ([...cartItems, selectedProductOptions]));
-    resetProductOptions();
   }
 
   useEffect(() => {

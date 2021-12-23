@@ -11,12 +11,37 @@ import {AiFillHeart} from "react-icons/ai";
 
 import './_products.scss';
 
+export function onSendItem(id, src, price, size, title, optionColors, items, setItems, func) {
+  const product = {
+    currentId: id,
+    currentSize: size,
+    currentColor: optionColors[0] || null,
+    currentSum: 1,
+    currentSrc: src,
+    currentPrice: price,
+    currentTitle: title
+  }
+
+  if (func) {
+    const isProductExist = func(items, id, 1);
+    if (isProductExist) {
+      return;
+    }
+  }
+
+  setItems(items => ([...items, product]));
+}
+
 const Products = ({category, currentFilter}) => {
 
-  const {setCartItems, cartItems} = useCart();
-
   const [products, setProducts] = useState([]);
+
+  const {setCartItems, cartItems, addExistedProductToCart, setWishItems, wishItems, lickedProductsId, setLickedProductsId} = useCart();
   const {request, itemLoadingStatus} = useHttp();
+
+  const onLikeProduct = (id) => {
+    setLickedProductsId(lickedProductsId => [...lickedProductsId, id]);
+  }
 
   function filterBySortPanel(arr, currentFilter) {
     if (!currentFilter) {
@@ -50,39 +75,6 @@ const Products = ({category, currentFilter}) => {
     })
   }
 
-  function addExistedProductToCart(targetId, products, n) {
-    setCartItems(cartItems => {
-      return products.map(item => {
-        if (item.currentId === targetId) {
-          return {...item, currentSum: item.currentSum + n}
-        } else {
-          return item;
-        }
-      });
-    });
-  }
-
-  function addProductToCart(id, src, price, size, title, optionColors) {
-    const product = {
-      currentId: id,
-      currentSize: size,
-      currentColor: optionColors[0] || null,
-      currentSum: 1,
-      currentSrc: src,
-      currentPrice: price,
-      currentTitle: title
-    }
-
-    const findItem = cartItems.find(item => item.currentId === id);
-    if (findItem) {
-      addExistedProductToCart(id, cartItems, 1);
-      return;
-    }
-
-    setCartItems(cartItems => ([...cartItems, product]));
-  }
-
-
   function renderProductsList(arr) {
       if (arr.length === 0) {
           return <h5 className="products__status">There are no products now</h5>
@@ -91,6 +83,7 @@ const Products = ({category, currentFilter}) => {
       return arr.map(({id, src, price, size, title, optionColors}) => {
 
         const optionsId = id + size + optionColors[0];
+        const isProductLike = lickedProductsId.find(lickedId => lickedId === optionsId);
 
           return (
             <div
@@ -107,10 +100,22 @@ const Products = ({category, currentFilter}) => {
                           <FaSearch />
                         </Link>
                         <button
-                          onClick={() => addProductToCart(optionsId, src, price, size, title, optionColors)}>
+                          onClick={() => onSendItem(optionsId, src, price, size, title, optionColors, cartItems, setCartItems, addExistedProductToCart)}>
                             <HiShoppingCart />
                         </button>
-                        <button><AiFillHeart /></button>
+                        <button
+                          onClick={() => {
+                            onSendItem(optionsId, src, price, size, title, optionColors, wishItems, setWishItems);
+                            onLikeProduct(optionsId);
+                          }}
+                          className={isProductLike ? 'disabled' : ""}
+                          disabled={isProductLike}>
+                          {
+                            isProductLike ?
+                              <AiFillHeart style={{fill: 'red'}}/> :
+                              <AiFillHeart />
+                          }
+                        </button>
                     </div>
                 </div>
             </div>

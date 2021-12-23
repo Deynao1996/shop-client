@@ -47,6 +47,12 @@
       &-links {
         display: flex;
         a, button {
+          &.disabled {
+            &:hover {
+              background-color: white;
+              transform: scale(1);
+            }
+          }
           position: relative;
           overflow: hidden;
           text-decoration: none;
