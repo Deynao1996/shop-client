@@ -1,5 +1,21 @@
 .products {
   padding: 20px;
+  h4 {
+    font-size: 27px;
+    margin: 14px;
+  }
+  a {
+    margin: 40px auto;
+    display: block;
+    width: 20%;
+    padding: 10px;
+    background-color: black;
+    color: white;
+    font-weight: 600;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+  }
   &__items {
     display: flex;
     justify-content: space-between;
@@ -47,7 +63,7 @@
       &-links {
         display: flex;
         a, button {
-          &.disabled {
+          &.licked {
             &:hover {
               background-color: white;
               transform: scale(1);

@@ -3,7 +3,7 @@ import './_sort.scss';
 const Sort = ({category, setCurrentFilter}) => {
   return (
     <section className="sort">
-        <h6 className="sort__title">{category}</h6>
+        <h6 className="sort__title">{category ? category : 'All products'}</h6>
         <div className="sort__filters">
             <div className="sort__product">
                 <span>Filter Products:</span>

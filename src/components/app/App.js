@@ -14,6 +14,7 @@ const  App = () => {
     <CartProvider>
       <Routes>
         <Route path="/" element={<MainPage />} />
+        <Route path="/products/all" element={<ProductsListPage/>} />
         <Route path="/products/summer" element={<ProductsListPage category="summer sale"/>} />
         <Route path="/products/autumn" element={<ProductsListPage category="autum collection"/>} />
         <Route path="/products/loungewear" element={<ProductsListPage category="loungewear lowe"/>} />

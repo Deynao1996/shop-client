@@ -159,7 +159,7 @@ const Cart = () => {
     <section className="cart">
         <div className="cart__title">YOUR BAG</div>
             <div className="cart__nav">
-                <Link to="/products/summer" className="cart__nav-cont">CONTINUE SHOPPING</Link>
+                <Link to="/products/all" className="cart__nav-cont">CONTINUE SHOPPING</Link>
                 <div className="cart__nav-links">
                   <span
                     style={{textDecoration: view === 'bag' ? 'none' : 'underline'}}
@@ -186,16 +186,18 @@ const Cart = () => {
 };
 
 const View = ({children, i, items, ...props}) => {
+  const numId = props.currentId.replace(/\D/g, "");
+
   return (
     <>
       <div
         className="cart__item"
         key={props.currentId}>
-          <div className="cart__item-img"><img src={props.currentSrc} alt={props.currentTitle}/></div>
+          <Link to={`/products/${numId}`} className="cart__item-img"><img src={props.currentSrc} alt={props.currentTitle}/></Link>
           <div className="cart__item-content">
               <div className="cart__item-name">Product: <span>{props.currentTitle}</span></div>
               <div className="cart__item-id">ID: <span>{props.currentId}</span></div>
-              <div className="cart__item-circle"></div>
+              <div className="cart__item-circle" style={{backgroundColor: `${props.currentColor}`}}></div>
               <div className="cart__item-size">Size: <span>{props.currentSize}</span></div>
           </div>
             {children}

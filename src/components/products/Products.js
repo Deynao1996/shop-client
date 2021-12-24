@@ -11,7 +11,7 @@ import {AiFillHeart} from "react-icons/ai";
 
 import './_products.scss';
 
-export function onSendItem(id, src, price, size, title, optionColors, items, setItems, func) {
+export const onSendItem = (id, src, price, size, title, optionColors, items, setItems, func) => {
   const product = {
     currentId: id,
     currentSize: size,
@@ -32,15 +32,30 @@ export function onSendItem(id, src, price, size, title, optionColors, items, set
   setItems(items => ([...items, product]));
 }
 
-const Products = ({category, currentFilter}) => {
+
+const Products = ({category, currentFilter, offset, titleContent, buttonContent}) => {
 
   const [products, setProducts] = useState([]);
 
   const {setCartItems, cartItems, addExistedProductToCart, setWishItems, wishItems, lickedProductsId, setLickedProductsId} = useCart();
   const {request, itemLoadingStatus} = useHttp();
 
-  const onLikeProduct = (id) => {
+  const _onLikeProduct = (id) => {
     setLickedProductsId(lickedProductsId => [...lickedProductsId, id]);
+  }
+
+  const _deleteWishItem = (id) => {
+    setWishItems(wishItems => wishItems.filter(item => item.currentId !== id));
+    setLickedProductsId(lickedProductsId => lickedProductsId.filter(item => item !== id));
+  };
+
+  const toggleLikeProduct = (isProductLike, id, src, price, size, title, optionColors, items, setItems) => {
+    if (isProductLike) {
+      _deleteWishItem(id)
+    } else {
+      onSendItem(id, src, price, size, title, optionColors, items, setItems);
+      _onLikeProduct(id);
+    }
   }
 
   function filterBySortPanel(arr, currentFilter) {
@@ -75,6 +90,14 @@ const Products = ({category, currentFilter}) => {
     })
   }
 
+  function setProductsWithOffset(arr, offset) {
+    if (offset) {
+      return arr.reverse().slice(0, offset);
+    } else {
+      return arr.reverse();
+    }
+  }
+
   function renderProductsList(arr) {
       if (arr.length === 0) {
           return <h5 className="products__status">There are no products now</h5>
@@ -105,11 +128,9 @@ const Products = ({category, currentFilter}) => {
                         </button>
                         <button
                           onClick={() => {
-                            onSendItem(optionsId, src, price, size, title, optionColors, wishItems, setWishItems);
-                            onLikeProduct(optionsId);
+                            toggleLikeProduct(isProductLike, optionsId, src, price, size, title, optionColors, wishItems, setWishItems)
                           }}
-                          className={isProductLike ? 'disabled' : ""}
-                          disabled={isProductLike}>
+                          className={isProductLike ? 'licked' : ""}>
                           {
                             isProductLike ?
                               <AiFillHeart style={{fill: 'red'}}/> :
@@ -123,13 +144,18 @@ const Products = ({category, currentFilter}) => {
       })
   }
 
-  function getAllFiltredProducts(arr) {
-    return renderProductsList(filterByCategory(filterBySortPanel(products, currentFilter), category));
+  function getAllFiltredProducts(arr, category) {
+    if (category) {
+      return renderProductsList(filterByCategory(filterBySortPanel(products, currentFilter), category));
+    } else {
+      return renderProductsList(filterBySortPanel(products, currentFilter));
+    }
   }
 
   useEffect(() => {
     request('http://localhost:3001/products')
-      .then(res => setProducts(res.reverse()));
+      .then(res => setProductsWithOffset(res, offset))
+      .then(res => setProducts(res));
       // eslint-disable-next-line
   }, []);
 
@@ -139,14 +165,16 @@ const Products = ({category, currentFilter}) => {
       return <h5 className="products__status">Loading error</h5>
   }
 
-  const elements = getAllFiltredProducts(products);
+  const elements = getAllFiltredProducts(products, category);
 
 
   return (
     <section className="products">
+      {titleContent}
       <div className="products__items">
         {elements}
       </div>
+      {buttonContent}
     </section>
   )
 };
