@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 
 import useHttp from '../../hooks/http.hook.js';
 import {useCart} from '../../contexts/CartContext.js';
@@ -10,6 +10,7 @@ import './_product.scss';
 
 const Product = () => {
   const {id} = useParams();
+  const navigate = useNavigate();
   const {setCartItems, cartItems, addExistedProductToCart} = useCart();
   const {request, itemLoadingStatus} = useHttp();
 
@@ -25,6 +26,13 @@ const Product = () => {
   })
 
   const getProductById = (arr, id) => {
+    const index = arr.find(item => item.id === id);
+
+    if (!index) {
+      redirectTo404();
+      return;
+    }
+
     arr.forEach(item => {
       if (item.id === id) {
         setSelectedProduct(item);
@@ -87,6 +95,10 @@ const Product = () => {
     if (typeof selectedProductOptions.currentSum === "string") {
       setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
     }
+  }
+
+  function redirectTo404() {
+    navigate('/error404', {replace: true});
   }
 
   function renderOptionsList(arr) {

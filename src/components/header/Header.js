@@ -1,7 +1,6 @@
 import {Link} from 'react-router-dom';
 import {useCart} from '../../contexts/CartContext.js';
 
-import {FaSearch} from 'react-icons/fa';
 import {HiShoppingCart} from "react-icons/hi";
 
 import './_header.scss';
@@ -16,13 +15,6 @@ const HeaderPromo = () => {
   return (
     <>
       <div className="header__promo">
-          <div className="header__promo_search">
-            <span>EN</span>
-            <label htmlFor="searchinput">
-              <FaSearch/>
-            </label>
-            <input type="text" id="searchinput" placeholder="Search"/>
-          </div>
           <Link to="/" className="header__promo_link">LAMA</Link>
           <div className="header__promo_act">
               <Link to="/register" className="header__promo_act-reg">Register</Link>
