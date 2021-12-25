@@ -1,9 +1,17 @@
+import {useSearchParams} from 'react-router-dom';
+
 import './_sort.scss';
 
 const Sort = ({category, setCurrentFilter}) => {
+
+  const [searchParams] = useSearchParams();
+  const urlParams = searchParams.get('products');
+
+  const sortTitle = urlParams ? 'All products matched by ' + urlParams : 'All products';
+
   return (
     <section className="sort">
-        <h6 className="sort__title">{category ? category : 'All products'}</h6>
+        <h6 className="sort__title">{category ? category : sortTitle}</h6>
         <div className="sort__filters">
             <div className="sort__product">
                 <span>Filter Products:</span>

@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useSearchParams} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 import useHttp from '../../hooks/http.hook.js';
@@ -36,6 +36,7 @@ export const onSendItem = (id, src, price, size, title, optionColors, items, set
 const Products = ({category, currentFilter, offset, titleContent, buttonContent}) => {
 
   const [products, setProducts] = useState([]);
+  const [searchParams] = useSearchParams();
 
   const {setCartItems, cartItems, addExistedProductToCart, setWishItems, wishItems, lickedProductsId, setLickedProductsId} = useCart();
   const {request, itemLoadingStatus} = useHttp();
@@ -88,6 +89,11 @@ const Products = ({category, currentFilter, offset, titleContent, buttonContent}
       }
       return item.category === filterName;
     })
+  }
+
+  function filtredBySearchPanel(arr) {
+    const searchURL = searchParams.get('products') || '';
+    return arr.filter(item => item.title.toLowerCase().includes(searchURL))
   }
 
   function setProductsWithOffset(arr, offset) {
@@ -148,7 +154,7 @@ const Products = ({category, currentFilter, offset, titleContent, buttonContent}
     if (category) {
       return renderProductsList(filterByCategory(filterBySortPanel(products, currentFilter), category));
     } else {
-      return renderProductsList(filterBySortPanel(products, currentFilter));
+      return renderProductsList(filtredBySearchPanel(filterBySortPanel(products, currentFilter)));
     }
   }
 
