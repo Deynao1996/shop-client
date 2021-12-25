@@ -37,6 +37,8 @@
       }
     }
     &-checkout {
+      font-size: 13.3px;
+      display: block;
       padding: 10px;
       font-weight: 600;
       cursor: pointer;
@@ -44,6 +46,7 @@
       background-color: black;
       color: white;
       border: none;
+      text-decoration: none;
     }
   }
   &__wrapper {
@@ -199,6 +202,15 @@
       color: white;
       font-weight: 600;
       border: none;
+      cursor: pointer;
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
     }
   }
+}
+
+.testMode {
+  display: none !important;
 }

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
+import StripeCheckout from 'react-stripe-checkout';
 
 import {useCart} from '../../contexts/CartContext.js';
 import {onSendItem} from '../products/Products.js';
@@ -78,6 +79,20 @@ const CartOrderList = () => {
     });
   }
 
+  function calcTotalPrice(arr) {
+    let totalPrice = 0;
+
+    arr.forEach(item => {
+      totalPrice += +item.currentPrice * item.currentSum;
+    });
+    return totalPrice;
+  }
+
+  function handleToken(token, adresses) {
+    console.log(token);
+    console.log(adresses);
+  }
+
   function renderCartProductsList(arr) {
     if (arr.length === 0) {
       return <h5>Your cart is empty now</h5>
@@ -109,18 +124,8 @@ const CartOrderList = () => {
     })
   }
 
-  function calcTotalPrice(arr) {
-    let totalPrice = 0;
-
-    arr.forEach(item => {
-      totalPrice += +item.currentPrice * item.currentSum;
-    });
-    return totalPrice;
-  }
-
   const cartProductsList = renderCartProductsList(cartItems);
   const totalPrice = calcTotalPrice(cartItems);
-
 
   return (
     <>
@@ -145,7 +150,17 @@ const CartOrderList = () => {
               <div>Total</div>
               <span>$ {totalPrice}</span>
           </div>
-          <button className="cart__order-checkout">CHECKOUT NOW</button>
+          <StripeCheckout
+            stripeKey="pk_test_51KAXsmEFNiWrQ3FhzZENwP3HLjjIZebNTP17IpoczCXZcK6GCmmB3GUnuGvOkZOjDJ4Ea9xUPnMz4d0OLRoA1nBK00ZLWBVvRi"
+            token={handleToken}
+            billingAddress
+            shippingAddress
+            amount={totalPrice * 100}
+            email="Test@gmail.com">
+              <button
+                className="cart__order-checkout"
+                disabled={!totalPrice}>CHECKOUT NOW</button>
+          </StripeCheckout>
       </div>
     </>
   )
@@ -172,7 +187,7 @@ const Cart = () => {
                       Your Wishlist ({wishItems.length})
                   </span>
                 </div>
-                <button className="cart__nav-checkout">CHECKOUT NOW</button>
+                <Link to="/" className="cart__nav-checkout">HOME PAGE</Link>
             </div>
 
             <div className="cart__wrapper">
