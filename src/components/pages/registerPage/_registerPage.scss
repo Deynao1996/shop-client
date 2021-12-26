@@ -23,11 +23,16 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    input {
+    &-input {
       flex: 1;
-      margin: 20px 10px 0px 0px;
-      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      input {
+        margin: 20px 10px 0px 0px;
+        padding: 10px;
+      }
     }
+
     span {
       font-size: 12px;
       margin: 20px 0px;
@@ -40,5 +45,10 @@
       color: white;
       cursor: pointer;
     }
+  }
+  .errorMessage {
+    color: red;
+    font-size: 12px;
+    padding: 10px 0 0 10px;
   }
 }

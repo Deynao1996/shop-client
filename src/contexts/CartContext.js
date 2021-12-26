@@ -10,6 +10,7 @@ export const CartProvider = ({children}) => {
   const [cartItems, setCartItems] = useState([]);
   const [wishItems, setWishItems] = useState([]);
   const [lickedProductsId, setLickedProductsId] = useState([]);
+  const [user, setUser] = useState(null);
   let sum = 0;
 
   const addExistedProductToCart = (items, id, n) => {
@@ -52,7 +53,8 @@ export const CartProvider = ({children}) => {
     wishItems,
     setWishItems,
     lickedProductsId,
-    setLickedProductsId
+    setLickedProductsId,
+    setUser
   }
 
 
