@@ -1,3 +1,4 @@
+import {useState, useEffect} from 'react';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import {toast, ToastContainer} from 'react-toastify';
@@ -32,6 +33,15 @@ const CustomField = ({type, placeholder, name, ...props}) => {
 
 const RegisterPage = () => {
 
+  const [existedUserData, setExistedUserData] = useState({
+    emails: [],
+    userNames: []
+  });
+
+  const {emails, userNames} = existedUserData;
+
+  const {request} = useHttp();
+
   const validationSchema = Yup.object({
     name: Yup.string()
             .required('Required field')
@@ -41,40 +51,33 @@ const RegisterPage = () => {
             .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field'),
     userName: Yup.string()
             .required('Required field')
-            .notOneOf([], 'This username allready axist'),
+            .notOneOf(userNames, 'This username allready exist')
+            .transform(transformValueToLowerCase),
     email: Yup.string()
             .required('Required field')
-            .email("Invalid email format"),
+            .email("Invalid email format")
+            .notOneOf(emails, 'This email allready exist')
+            .transform(transformValueToLowerCase),
     password: Yup.string()
             .required('Required field'),
     confirmPassword: Yup.string()
-       .oneOf([Yup.ref('password'), null], 'Passwords must match')
+            .oneOf([Yup.ref('password'), null], 'Passwords must match')
   });
 
-  const {request} = useHttp();
+  const setEistedsUsers = (arr) => {
+    const userNames = [];
+    const emails = [];
 
-  async function createUser({name, email, lastName, userName, password}) {
-    const user = {
-      name,
-      lastName,
-      userName,
-      email,
-      password
-    }
+    arr.forEach((item, i) => {
+      userNames.push(item.userName.toLowerCase());
+      emails.push(item.email.toLowerCase());
+    });
 
-    try {
-      const newUser = await request(
-        'http://localhost:3001/users',
-        'POST',
-        JSON.stringify(user));
+    setExistedUserData(existedUserData => ({...existedUserData, emails, userNames}))
+  }
 
-      if (newUser) {
-        showSuccessModal('success');
-      }
-    } catch (e) {
-      showSuccessModal('error');
-    }
-
+  function transformValueToLowerCase(value, originalvalue) {
+    return this.isType(value) && value !== null ? value.toLowerCase() : value;
   }
 
   function showSuccessModal(status) {
@@ -84,6 +87,37 @@ const RegisterPage = () => {
       toast('Something went wrong. Please try later', {type: 'error'});
     }
   }
+
+  async function createUser({name, email, lastName, userName, password}) {
+    const user = {
+      name,
+      lastName,
+      userName: userName.toLowerCase(),
+      email: email.toLowerCase(),
+      password
+    }
+
+    try {
+      const newUser = await request(
+        'http://localhost:3001/users',
+        'POST',
+        JSON.stringify(user));
+
+      const existedUsers = await request('http://localhost:3001/users');
+      setEistedsUsers(existedUsers);
+
+      if (newUser) {
+        showSuccessModal('success');
+      }
+    } catch (e) {
+      showSuccessModal('error');
+    }
+  }
+
+  useEffect(() => {
+    request('http://localhost:3001/users')
+      .then(res => setEistedsUsers(res))
+  }, [])
 
   return (
     <div className="create">
