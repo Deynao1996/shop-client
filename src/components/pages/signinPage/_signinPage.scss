@@ -31,7 +31,7 @@
       background-color: teal;
       color: white;
       cursor: pointer;
-      margin-bottom: 10px;
+      margin: 10px 0;
       text-align: center;
     }
     &-link {
@@ -41,5 +41,10 @@
       cursor: pointer;
       color: black;
     }
+  }
+  .errorMessage {
+    color: red;
+    font-size: 12px;
+    padding-left: 10px;
   }
 }

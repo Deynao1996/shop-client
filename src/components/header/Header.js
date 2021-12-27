@@ -12,7 +12,7 @@ const HeaderBanner = () => {
 
 const HeaderPromo = () => {
 
-  const {sum} = useCart();
+  const {sum, currentUser, signOut} = useCart();
   const navigate = useNavigate();
 
   function handleSubmit(e) {
@@ -21,6 +21,10 @@ const HeaderPromo = () => {
     const value = e.target.products.value.toLowerCase();
     navigate('/products/all/?products=' + value, {replace: true});
     e.target.reset();
+  }
+
+  function redirectToMainPage() {
+    navigate('/', {replace: true})
   }
 
   return (
@@ -36,8 +40,10 @@ const HeaderPromo = () => {
           </form>
           <Link to="/" className="header__promo_link">LAMA</Link>
           <div className="header__promo_act">
-              <Link to="/register" className="header__promo_act-reg">Register</Link>
-              <Link to="/signin" className="header__promo_act-signin">Sign in</Link>
+              <View
+                currentUser={currentUser}
+                signOut={signOut}
+                redirectToMainPage={redirectToMainPage}/>
               <Link to="/cart" className="header__promo_act-cart">
                 <HiShoppingCart size="1.2em"/>
                   {sum ? <div>{sum}</div> : null}
@@ -47,5 +53,19 @@ const HeaderPromo = () => {
     </>
   )
 };
+
+const View = ({currentUser, signOut, redirectToMainPage}) => {
+  if (currentUser) {
+    return <span
+      className="header__promo_act-out"
+      onClick={() => signOut(redirectToMainPage)}>Sign Out</span>
+  }
+  return (
+    <>
+      <Link to="/register" className="header__promo_act-reg">Register</Link>
+      <Link to="/signin" className="header__promo_act-signin">Sign in</Link>
+    </>
+  )
+}
 
 export {HeaderBanner, HeaderPromo};

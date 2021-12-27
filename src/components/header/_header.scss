@@ -67,6 +67,16 @@
           border-radius: 50%;
         }
       }
+      &-out {
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+        text-transform: uppercase;
+        margin-left: 25px;
+        cursor: pointer;
+        margin-left: 96px;
+      }
     }
   }
 }

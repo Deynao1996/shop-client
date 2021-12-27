@@ -1,19 +1,89 @@
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import * as Yup from 'yup';
+import {Formik, Form} from 'formik';
+import {ToastContainer} from 'react-toastify';
+
+import useHttp from '../../../hooks/http.hook.js';
+import {useCart} from '../../../contexts/CartContext.js';
+
+import {transformValueToLowerCase, showStatusModal, CustomField} from '../registerPage/RegisterPage.js';
 
 import './_signinPage.scss';
 
+const initialValues = {
+  userName: '',
+  password: ''
+}
+
 const SigninPage = () => {
+
+  const navigate = useNavigate();
+
+  const {request} = useHttp();
+  const {login} = useCart();
+
+  const validationSchema = Yup.object({
+    userName: Yup.string()
+            .required('Required field')
+            .transform(transformValueToLowerCase),
+    password: Yup.string()
+            .required('Required field')
+  });
+
+  async function handleSubmit({userName, password}) {
+    try {
+      const response = await request('http://localhost:3001/users');
+      const user = await response.find(item => item.userName === userName.toLowerCase());
+
+      if (user && user.password === password) {
+        login(user, redirectToMainPage);
+      } else {
+        showStatusModal('error', 'Invalid Username or Password');
+      }
+    } catch (e) {
+      showStatusModal('error', 'Something went wrong. Try later');
+    }
+  }
+
+  function redirectToMainPage() {
+    navigate('/', {replace: true})
+  }
+
   return (
     <div className="login">
         <div className="login__wrapper">
             <div className="login__title">SIGN IN</div>
-            <form action="#" className="login__form">
-                <input type="text" placeholder="username" name="username" required />
-                <input type="password" placeholder="password" name="password" required />
-                <div className="login__form-submit">LOGIN</div>
+            <ToastContainer />
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={(values, {resetForm}) => {
+                handleSubmit(values);
+                resetForm();
+            }}>
+            {({isSubmitting}) => (
+              <Form className="login__form">
+                <CustomField
+                  type="text"
+                  placeholder="username"
+                  id="userName"
+                  name="userName"/>
+                <CustomField
+                  type="password"
+                  placeholder="password"
+                  name="password"
+                  id="password"/>
+                <button
+                  disabled={isSubmitting}
+                  type="submit"
+                  className="login__form-submit">
+                    LOGIN
+                </button>
                 <a href="#" className="login__form-link">DO NOT YOU REMEMBER THE PASSWORD?</a>
                 <Link to="/register" className="login__form-link">CREATE A NEW ACCOUNT</Link>
-            </form>
+              </Form>
+            )}
+            </Formik>
         </div>
     </div>
   )

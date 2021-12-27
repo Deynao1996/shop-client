@@ -203,6 +203,14 @@
       "email": "deynao1996@gmail.com",
       "password": "121212",
       "id": 1
+    },
+    {
+      "name": "Konstantyn",
+      "lastName": "Drozdov",
+      "userName": "confession",
+      "email": "drozdov1994@gmail.com",
+      "password": "1234",
+      "id": 2
     }
   ]
 }

@@ -45,6 +45,19 @@
       color: white;
       cursor: pointer;
     }
+    &-links {
+      display: flex;
+      align-items: center;
+      a {
+        margin: 5px 10px 0 0;
+        font-size: 12px;
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+        text-transform: uppercase;
+      }
+
+    }
   }
   .errorMessage {
     color: red;

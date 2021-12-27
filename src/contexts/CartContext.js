@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 
 const CartContext = React.createContext();
 
@@ -10,7 +10,7 @@ export const CartProvider = ({children}) => {
   const [cartItems, setCartItems] = useState([]);
   const [wishItems, setWishItems] = useState([]);
   const [lickedProductsId, setLickedProductsId] = useState([]);
-  const [user, setUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
   let sum = 0;
 
   const addExistedProductToCart = (items, id, n) => {
@@ -28,6 +28,18 @@ export const CartProvider = ({children}) => {
       return findItem;
     }
     return findItem;
+  }
+
+  const login = (obj, cb) => {
+    setCurrentUser(obj);
+    localStorage.setItem('user', JSON.stringify(obj));
+    cb?.();
+  }
+
+  const signOut = (cb) => {
+    setCurrentUser(null);
+    localStorage.removeItem('user');
+    cb();
   }
 
   function renderSumCartItems() {
@@ -54,8 +66,16 @@ export const CartProvider = ({children}) => {
     setWishItems,
     lickedProductsId,
     setLickedProductsId,
-    setUser
+    currentUser,
+    login,
+    signOut
   }
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      login(JSON.parse(localStorage.getItem('user')));
+    }
+  }, [])
 
 
   return (

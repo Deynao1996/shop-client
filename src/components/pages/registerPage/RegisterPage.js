@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import {Link} from 'react-router-dom';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
 import {toast, ToastContainer} from 'react-toastify';
@@ -17,7 +18,15 @@ const initialValues = {
   confirmPassword: ''
 }
 
-const CustomField = ({type, placeholder, name, ...props}) => {
+export function transformValueToLowerCase(value, originalvalue) {
+  return this.isType(value) && value !== null ? value.toLowerCase() : value;
+}
+
+export function showStatusModal(status, message) {
+  toast(message, {type: status});
+}
+
+export const CustomField = ({type, placeholder, name, ...props}) => {
   return (
     <>
       <Field
@@ -61,31 +70,20 @@ const RegisterPage = () => {
     password: Yup.string()
             .required('Required field'),
     confirmPassword: Yup.string()
+            .required('Required field')
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
   });
 
-  const setEistedsUsers = (arr) => {
+  const setExistedsUsers = (arr) => {
     const userNames = [];
     const emails = [];
 
-    arr.forEach((item, i) => {
+    arr.forEach(item => {
       userNames.push(item.userName.toLowerCase());
       emails.push(item.email.toLowerCase());
     });
 
-    setExistedUserData(existedUserData => ({...existedUserData, emails, userNames}))
-  }
-
-  function transformValueToLowerCase(value, originalvalue) {
-    return this.isType(value) && value !== null ? value.toLowerCase() : value;
-  }
-
-  function showSuccessModal(status) {
-    if (status === 'success') {
-      toast('Success! Check email for details', {type: 'success'});
-    } else if (status === 'error') {
-      toast('Something went wrong. Please try later', {type: 'error'});
-    }
+    setExistedUserData({emails, userNames})
   }
 
   async function createUser({name, email, lastName, userName, password}) {
@@ -104,19 +102,19 @@ const RegisterPage = () => {
         JSON.stringify(user));
 
       const existedUsers = await request('http://localhost:3001/users');
-      setEistedsUsers(existedUsers);
+      setExistedsUsers(existedUsers);
 
       if (newUser) {
-        showSuccessModal('success');
+        showStatusModal('success', 'Success! Your account has been created');
       }
     } catch (e) {
-      showSuccessModal('error');
+      showStatusModal('error', 'Something went wrong. Please try later');
     }
   }
 
   useEffect(() => {
     request('http://localhost:3001/users')
-      .then(res => setEistedsUsers(res))
+      .then(res => setExistedsUsers(res))
   }, [])
 
   return (
@@ -183,6 +181,10 @@ const RegisterPage = () => {
                   disabled={isSubmitting}>
                     CREATE
                 </button>
+                <div className="create__form-links">
+                  <Link to="/">Home page</Link>
+                  <Link to="/signin">Sign in</Link>
+                </div>
               </Form>
             )}
           </Formik>

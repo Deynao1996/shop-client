@@ -56,7 +56,7 @@ const CartWishList = () => {
 };
 
 const CartOrderList = () => {
-  const {cartItems, setCartItems} = useCart();
+  const {cartItems, setCartItems, currentUser} = useCart();
 
   const deleteProductFromCart = (id) => {
     setCartItems(cartItems => cartItems.filter(item => item.currentId !== id));
@@ -152,11 +152,12 @@ const CartOrderList = () => {
           </div>
           <StripeCheckout
             stripeKey="pk_test_51KAXsmEFNiWrQ3FhzZENwP3HLjjIZebNTP17IpoczCXZcK6GCmmB3GUnuGvOkZOjDJ4Ea9xUPnMz4d0OLRoA1nBK00ZLWBVvRi"
+            image="https://toppng.com/uploads/preview/aid-icon-png-download-make-a-payment-ico-11563043629ug20hj7hbv.png"
             token={handleToken}
             billingAddress
             shippingAddress
             amount={totalPrice * 100}
-            email="Test@gmail.com">
+            email={currentUser?.email || ''}>
               <button
                 className="cart__order-checkout"
                 disabled={!totalPrice}>CHECKOUT NOW</button>
