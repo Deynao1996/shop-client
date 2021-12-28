@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import StripeCheckout from 'react-stripe-checkout';
+import {ToastContainer} from 'react-toastify';
 
 import {useCart} from '../../contexts/CartContext.js';
+import useHttp from '../../hooks/http.hook.js';
 import {onSendItem} from '../products/Products.js';
+import {showStatusModal} from '../pages/registerPage/RegisterPage';
 
 import {ImCross} from "react-icons/im";
 import './_cart.scss';
@@ -58,6 +61,7 @@ const CartWishList = () => {
 const CartOrderList = () => {
   const navigate = useNavigate();
   const {cartItems, setCartItems, currentUser} = useCart();
+  const {request} = useHttp();
 
   const deleteProductFromCart = (id) => {
     setCartItems(cartItems => cartItems.filter(item => item.currentId !== id));
@@ -93,9 +97,37 @@ const CartOrderList = () => {
     return totalPrice;
   }
 
-  function handleToken(token, adresses) {
-    console.log(token);
-    console.log(adresses);
+  async function handleToken(token, addresses) {
+    const {email, id, created, card:{address_city, address_country, address_line1, name}} = token;
+    const currentDate = new Date(created * 1000).toString();
+
+    const orderedProducts = [];
+    cartItems.forEach(item => {
+      orderedProducts.push(item.currentId + 'X' + item.currentSum);
+    });
+
+    const order = {
+      id,
+      email,
+      name,
+      address_city,
+      address_country,
+      address_line1,
+      currentDate,
+      orderedProducts: orderedProducts.toString()
+    }
+
+    try {
+      await request(
+        'http://localhost:3001/orders',
+        'POST',
+        JSON.stringify(order));
+
+      showStatusModal('success', 'Your payment passed. The operator will contact you');
+      setCartItems(cartItems => []);
+    } catch (e) {
+      showStatusModal('error', 'Something went wrong. Please try later');
+    }
   }
 
   function renderCartProductsList(arr) {
@@ -155,6 +187,7 @@ const CartOrderList = () => {
               <div>Total</div>
               <span>$ {totalPrice}</span>
           </div>
+          <ToastContainer />
           {currentUser ?
             <StripeCheckout
               stripeKey="pk_test_51KAXsmEFNiWrQ3FhzZENwP3HLjjIZebNTP17IpoczCXZcK6GCmmB3GUnuGvOkZOjDJ4Ea9xUPnMz4d0OLRoA1nBK00ZLWBVvRi"

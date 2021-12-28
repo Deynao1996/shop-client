@@ -11,7 +11,7 @@ export const CartProvider = ({children}) => {
   const [wishItems, setWishItems] = useState([]);
   const [lickedProductsId, setLickedProductsId] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
-  console.log(currentUser);
+
   let sum = 0;
 
   const addExistedProductToCart = (items, id, n) => {

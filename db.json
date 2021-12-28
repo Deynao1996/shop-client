@@ -204,41 +204,7 @@
       "password": "121212",
       "id": 1,
       "newsellerEmail": "Deynao1996@gmail.com"
-    },
-    {
-      "name": "Konstantyn",
-      "lastName": "Drozdov",
-      "userName": "confession",
-      "email": "drozdov1994@gmail.com",
-      "password": "121212",
-      "id": 2,
-      "newsellerEmail": "Drozdov1994@gmail.com"
-    },
-    {
-      "name": "Victoria",
-      "lastName": "Kravchenko",
-      "userName": "krava96",
-      "email": "kravchenko1996@gmail.com",
-      "password": "121212",
-      "id": 3,
-      "newsellerEmail": "kravchenko1996@gmail.com"
-    },
-    {
-      "name": "abc",
-      "lastName": "def",
-      "userName": "abc",
-      "email": "abc@gmail.com",
-      "password": "121212",
-      "id": 4,
-      "newsellerEmail": "abc@gmail.com"
-    },
-    {
-      "name": "test",
-      "lastName": "test",
-      "userName": "test",
-      "email": "test@gmail.com",
-      "password": "12",
-      "id": 5
     }
-  ]
+  ],
+  "orders": []
 }
