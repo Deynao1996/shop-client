@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate, useLocation} from "react-router-dom";
 import * as Yup from 'yup';
 import {Formik, Form} from 'formik';
 import {ToastContainer} from 'react-toastify';
@@ -18,9 +18,12 @@ const initialValues = {
 const SigninPage = () => {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {request} = useHttp();
   const {login} = useCart();
+
+  const fromCartPage = location.state;
 
   const validationSchema = Yup.object({
     userName: Yup.string()
@@ -35,8 +38,11 @@ const SigninPage = () => {
       const response = await request('http://localhost:3001/users');
       const user = await response.find(item => item.userName === userName.toLowerCase());
 
-      if (user && user.password === password) {
-        login(user, redirectToMainPage);
+      if (user && user.password === password && fromCartPage) {
+        login(user, redirectToPage, fromCartPage);
+      } else if (user && user.password === password) {
+        login(user, redirectToPage, '/');
+        return;
       } else {
         showStatusModal('error', 'Invalid Username or Password');
       }
@@ -45,8 +51,8 @@ const SigninPage = () => {
     }
   }
 
-  function redirectToMainPage() {
-    navigate('/', {replace: true})
+  function redirectToPage(url) {
+    navigate(url, {replace: true})
   }
 
   return (
@@ -79,7 +85,7 @@ const SigninPage = () => {
                   className="login__form-submit">
                     LOGIN
                 </button>
-                <a href="#" className="login__form-link">DO NOT YOU REMEMBER THE PASSWORD?</a>
+                <Link to="/" className="login__form-link">HOME PAGE</Link>
                 <Link to="/register" className="login__form-link">CREATE A NEW ACCOUNT</Link>
               </Form>
             )}

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import StripeCheckout from 'react-stripe-checkout';
 
 import {useCart} from '../../contexts/CartContext.js';
@@ -56,6 +56,7 @@ const CartWishList = () => {
 };
 
 const CartOrderList = () => {
+  const navigate = useNavigate();
   const {cartItems, setCartItems, currentUser} = useCart();
 
   const deleteProductFromCart = (id) => {
@@ -77,6 +78,10 @@ const CartOrderList = () => {
         }
       })
     });
+  }
+
+  function redirectToSignIn() {
+    navigate('/signin', {state: '/cart'})
   }
 
   function calcTotalPrice(arr) {
@@ -150,18 +155,25 @@ const CartOrderList = () => {
               <div>Total</div>
               <span>$ {totalPrice}</span>
           </div>
-          <StripeCheckout
-            stripeKey="pk_test_51KAXsmEFNiWrQ3FhzZENwP3HLjjIZebNTP17IpoczCXZcK6GCmmB3GUnuGvOkZOjDJ4Ea9xUPnMz4d0OLRoA1nBK00ZLWBVvRi"
-            image="https://toppng.com/uploads/preview/aid-icon-png-download-make-a-payment-ico-11563043629ug20hj7hbv.png"
-            token={handleToken}
-            billingAddress
-            shippingAddress
-            amount={totalPrice * 100}
-            email={currentUser?.email || ''}>
-              <button
-                className="cart__order-checkout"
-                disabled={!totalPrice}>CHECKOUT NOW</button>
-          </StripeCheckout>
+          {currentUser ?
+            <StripeCheckout
+              stripeKey="pk_test_51KAXsmEFNiWrQ3FhzZENwP3HLjjIZebNTP17IpoczCXZcK6GCmmB3GUnuGvOkZOjDJ4Ea9xUPnMz4d0OLRoA1nBK00ZLWBVvRi"
+              image="https://toppng.com/uploads/preview/aid-icon-png-download-make-a-payment-ico-11563043629ug20hj7hbv.png"
+              token={handleToken}
+              billingAddress
+              shippingAddress
+              amount={totalPrice * 100}
+              email={currentUser?.email || ''}>
+                <button
+                  className="cart__order-checkout"
+                  disabled={!totalPrice}>CHECKOUT NOW</button>
+            </StripeCheckout> :
+            <button
+              className="cart__order-checkout"
+              onClick={redirectToSignIn}>
+                SIGN IN
+            </button>
+          }
       </div>
     </>
   )

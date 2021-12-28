@@ -11,6 +11,7 @@ export const CartProvider = ({children}) => {
   const [wishItems, setWishItems] = useState([]);
   const [lickedProductsId, setLickedProductsId] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
+  console.log(currentUser);
   let sum = 0;
 
   const addExistedProductToCart = (items, id, n) => {
@@ -30,10 +31,10 @@ export const CartProvider = ({children}) => {
     return findItem;
   }
 
-  const login = (obj, cb) => {
+  const login = (obj, cb, param) => {
     setCurrentUser(obj);
     localStorage.setItem('user', JSON.stringify(obj));
-    cb?.();
+    cb?.(param);
   }
 
   const signOut = (cb) => {
@@ -67,6 +68,7 @@ export const CartProvider = ({children}) => {
     lickedProductsId,
     setLickedProductsId,
     currentUser,
+    setCurrentUser,
     login,
     signOut
   }
