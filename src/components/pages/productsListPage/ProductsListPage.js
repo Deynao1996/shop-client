@@ -6,12 +6,11 @@ import Products from '../../products/Products.js';
 import Sort from '../../sort/Sort.js';
 
 const ProductsListPage = ({category}) => {
-
   const [currentFilter, setCurrentFilter] = useState({
     size: 'all',
     price: 'newest'
-  })
-  
+  });
+
 
   return (
     <>
@@ -28,6 +27,6 @@ const ProductsListPage = ({category}) => {
       <Footer />
     </>
   )
-};
+}
 
 export default ProductsListPage;

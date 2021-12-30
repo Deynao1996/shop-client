@@ -13,7 +13,6 @@ const Category = () => {
                     <Link to="/products/summer" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
-
             <div className="category__item">
               <img src="https://images.pexels.com/photos/2983464/pexels-photo-2983464.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="bg"/>
                 <div className="category__item_content">
@@ -21,7 +20,6 @@ const Category = () => {
                     <Link to="/products/loungewear" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
-
             <div className="category__item">
               <img src="https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="bg"/>
                 <div className="category__item_content">

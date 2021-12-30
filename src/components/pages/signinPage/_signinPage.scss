@@ -33,6 +33,10 @@
       cursor: pointer;
       margin: 10px 0;
       text-align: center;
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
     }
     &-link {
       margin: 5px 0px;

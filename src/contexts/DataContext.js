@@ -1,20 +1,23 @@
 import React, {useContext, useState, useEffect} from 'react';
+import {useFeatures} from '../hooks/useFeatures';
 
-const CartContext = React.createContext();
+const DataContext = React.createContext();
 
-export const useCart = () => {
-  return useContext(CartContext);
-}
+export const useProvider = () => {
+  return useContext(DataContext);
+};
 
-export const CartProvider = ({children}) => {
+export const DataProvider = ({children}) => {
   const [cartItems, setCartItems] = useState([]);
   const [wishItems, setWishItems] = useState([]);
   const [lickedProductsId, setLickedProductsId] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
 
-  let sum = 0;
+  const {redirectTo} = useFeatures();
 
-  const addExistedProductToCart = (items, id, n) => {
+  let productsSum = 0;
+
+  const addExistingProductToCart = (items, id, n) => {
     const findItem = items.find(item => item.currentId === id);
     if (findItem) {
       setCartItems(cartItems => {
@@ -29,31 +32,37 @@ export const CartProvider = ({children}) => {
       return findItem;
     }
     return findItem;
-  }
+  };
 
-  const login = (obj, cb, param) => {
+  const login = (obj, url) => {
     setCurrentUser(obj);
     localStorage.setItem('user', JSON.stringify(obj));
-    cb?.(param);
-  }
 
-  const signOut = (cb) => {
+    if (url) {
+      redirectTo(url, true);
+    }
+  };
+
+  const signOut = (url) => {
     setCurrentUser(null);
     localStorage.removeItem('user');
-    cb();
-  }
+
+    if (url) {
+      redirectTo(url, true);
+    }
+  };
 
   function renderSumCartItems() {
     if (cartItems.length === 0) {
-      return
+      return;
     }
 
     cartItems.forEach(({currentSum}) => {
-      sum += currentSum;
+      productsSum += currentSum;
     });
 
-    if (sum > 999) {
-      sum = 999
+    if (productsSum > 999) {
+      productsSum = 999
     }
   }
   renderSumCartItems();
@@ -61,8 +70,8 @@ export const CartProvider = ({children}) => {
   const value = {
     cartItems,
     setCartItems,
-    addExistedProductToCart,
-    sum,
+    addExistingProductToCart,
+    productsSum,
     wishItems,
     setWishItems,
     lickedProductsId,
@@ -77,12 +86,13 @@ export const CartProvider = ({children}) => {
     if (localStorage.getItem('user')) {
       login(JSON.parse(localStorage.getItem('user')));
     }
-  }, [])
+    // eslint-disable-next-line
+  }, []);
 
 
   return (
-    <CartContext.Provider value={value}>
+    <DataContext.Provider value={value}>
       {children}
-    </CartContext.Provider>
+    </DataContext.Provider>
   )
 }
