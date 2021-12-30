@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react';
-import {useParams, useNavigate} from "react-router-dom";
-
-import useHttp from '../../hooks/http.hook.js';
-import {useCart} from '../../contexts/CartContext.js';
+import {useParams} from "react-router-dom";
+import useService from '../../hooks/useService';
+import {useProvider} from '../../contexts/DataContext.js';
+import {useFeatures} from '../../hooks/useFeatures';
 
 import Spinner from '../spinner/Spinner.js';
 
@@ -10,10 +10,6 @@ import './_product.scss';
 
 const Product = () => {
   const {id} = useParams();
-  const navigate = useNavigate();
-  const {setCartItems, cartItems, addExistedProductToCart} = useCart();
-  const {request, itemLoadingStatus} = useHttp();
-
   const [selectedProduct, setSelectedProduct] = useState({});
   const [selectedProductOptions, setSelectedProductOptions] = useState({
     currentId: null,
@@ -23,57 +19,54 @@ const Product = () => {
     currentSrc: null,
     currentPrice: null,
     currentTitle: null
-  })
+  });
 
-  const getProductById = (arr, id) => {
-    const index = arr.find(item => item.id === id);
+  const {setCartItems, cartItems, addExistingProductToCart} = useProvider();
+  const {getProductById, itemLoadingStatus} = useService();
+  const {redirectTo} = useFeatures();
 
-    if (!index) {
-      redirectTo404();
-      return;
+  const setProduct = (product) => {
+    if (!product) {
+      return redirectTo('/error404', true);
     }
 
-    arr.forEach(item => {
-      if (item.id === id) {
-        setSelectedProduct(item);
-        setSelectedProductOptions(({currentId, currentSize, currentColor, currentSum}) => {
-          const optionCurrentId = id + item.optionSizes[0] + item.optionColors[0];
-          return {
-            currentId: optionCurrentId,
-            currentSize: item.optionSizes[0],
-            currentColor: item.optionColors[0],
-            currentSum: currentSum,
-            currentSrc: item.src,
-            currentPrice: item.price,
-            currentTitle: item.title
-          }
-        });
+    setSelectedProduct(product);
+    setSelectedProductOptions(({currentId, currentSize, currentColor, currentSum}) => {
+      const optionCurrentId = id + product.optionSizes[0] + product.optionColors[0];
+      return {
+        currentId: optionCurrentId,
+        currentSize: product.optionSizes[0],
+        currentColor: product.optionColors[0],
+        currentSum: currentSum,
+        currentSrc: product.src,
+        currentPrice: product.price,
+        currentTitle: product.title
       }
     });
-  }
+  };
 
   const _setOption = (e, point, propName) => {
     const value = point ? point : e.target.value;
     setSelectedProductOptions(selectedProductOptions => {
       return {...selectedProductOptions, [propName]: value}
-    })
-  }
+    });
+  };
 
   const onSizeSelected = (e) => {
     const value = e.target.value;
     const newId = selectedProductOptions.currentId.replace(/\D/g, "") + value + selectedProductOptions.currentColor;
     setSelectedProductOptions(selectedProductOptions => {
       return {...selectedProductOptions, currentSize: value, currentId: newId}
-    })
-  }
+    });
+  };
 
   const onColorSelected = (e, colorName) => {
     const value = colorName;
     const newId = selectedProductOptions.currentId.replace(/\D/g, "") + selectedProductOptions.currentSize + value;
     setSelectedProductOptions(selectedProductOptions => {
       return {...selectedProductOptions, currentColor: value, currentId: newId}
-    })
-  }
+    });
+  };
 
   const onSumSelected = (e, n) => {
     const value = selectedProductOptions.currentSum + n;
@@ -81,29 +74,25 @@ const Product = () => {
       return;
     }
     _setOption(e, value, 'currentSum');
-  }
+  };
 
-  const onHandlerSumSelected = (e) => {
+  const onHandeSumSelected = (e) => {
     const value = +e.target.value.replace(/\D/g, "");
     if (value > 999) {
       return;
     }
     _setOption(e, value, 'currentSum');
-  }
+  };
 
   const onInputBlur = () => {
     if (typeof selectedProductOptions.currentSum === "string") {
-      setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}))
-    }
-  }
-
-  function redirectTo404() {
-    navigate('/error404', {replace: true});
-  }
+      setSelectedProductOptions(selectedProductOptions => ({...selectedProductOptions, currentSum: 1}));
+    };
+  };
 
   function renderOptionsList(arr) {
     if (!arr || arr.length === 0) {
-      return <option value="0">No options yet</option>
+      return <option value="0">No options yet</option>;
     }
     return arr.map((item, i) => {
       return <option
@@ -111,12 +100,12 @@ const Product = () => {
         value={item}>
           {item}
         </option>
-    })
-  }
+    });
+  };
 
   function renderColorsList(arr) {
     if (!arr || arr.length === 0) {
-      return <span>No colors yet</span>
+      return <span>No colors yet</span>;
     }
     return arr.map((colorName, i) => {
       return <div
@@ -124,8 +113,8 @@ const Product = () => {
         key={i}
         className={`product__circle ${selectedProductOptions.currentColor === colorName ? 'product__circle_active' : ''}`}
         onClick={(e) => onColorSelected(e, colorName)}></div>
-    })
-  }
+    });
+  };
 
   function resetProductOptions() {
     setSelectedProductOptions(selectedProductOptions => {
@@ -133,30 +122,30 @@ const Product = () => {
         currentSum: 1,
         currentSize: selectedProduct.optionSizes[0],
         currentColor: selectedProduct.optionColors[0],
-        }
-    })
-  }
+      };
+    });
+  };
 
   function onSendProduct() {
-    const isProductExist = addExistedProductToCart(cartItems, selectedProductOptions.currentId, selectedProductOptions.currentSum);
+    const isProductExist = addExistingProductToCart(cartItems, selectedProductOptions.currentId, selectedProductOptions.currentSum);
     resetProductOptions();
     if (isProductExist) {
       return;
     }
 
     setCartItems(cartItems => ([...cartItems, selectedProductOptions]));
-  }
+  };
 
   useEffect(() => {
-    request('http://localhost:3001/products')
-      .then(res => getProductById(res, id))
+    getProductById(id)
+      .then(res => setProduct(res, id));
       // eslint-disable-next-line
-  }, [id])
+  }, [id]);
 
   if (itemLoadingStatus === "loading") {
       return <Spinner/>;
   } else if (itemLoadingStatus === "error") {
-      return <h5 className="products__status">Loading error</h5>
+      return <h5 className="products__status">Loading error</h5>;
   }
 
   const {src, price, title, description, optionSizes, optionColors} = selectedProduct;
@@ -182,7 +171,7 @@ const Product = () => {
                   <span>Size</span>
                   <select
                     name="select"
-                    value={selectedProductOptions.currentSize || "0"}
+                    value={selectedProductOptions.currentSize || ''}
                     onChange={(e) => onSizeSelected(e)}>
                       {optionsListItems}
                   </select>
@@ -200,7 +189,7 @@ const Product = () => {
                       name="sum"
                       className="product__sum"
                       value={selectedProductOptions.currentSum}
-                      onChange={(e) => onHandlerSumSelected(e)}
+                      onChange={(e) => onHandeSumSelected(e)}
                       onBlur={() => onInputBlur()}/>
                     <div
                       className="product__plus"

@@ -1,47 +1,43 @@
 import {Formik, Form} from 'formik';
 import {ToastContainer} from 'react-toastify';
-import {useNavigate} from 'react-router-dom';
-
-import {useCart} from '../../contexts/CartContext.js';
-import useHttp from '../../hooks/http.hook.js';
-import {showStatusModal, CustomField} from '../pages/registerPage/RegisterPage.js';
+import {useProvider} from '../../contexts/DataContext.js';
+import useService from '../../hooks/useService';
+import {useFeatures} from '../../hooks/useFeatures';
+import {CustomField} from '../pages/registerPage/RegisterPage.js';
 
 import {FaTelegramPlane} from "react-icons/fa";
-
 import './_newseller.scss';
 
 const initialValues = {
   newsellerEmail: ''
-}
+};
 
 const Newseller = () => {
-
-  const navigate = useNavigate();
-  const {request} = useHttp();
-  const {currentUser, setCurrentUser, login} = useCart();
+  const {currentUser, login} = useProvider();
+  const {showStatusModal, redirectTo} = useFeatures();
+  const {putNewsellerEmail} = useService();
 
   async function handleSubmit(values) {
     if (!currentUser) {
-      return navigate('/signin');
+      return redirectTo('/signin', false);
     }
 
     const currentEmail = values.newsellerEmail;
     const userId = currentUser.id;
+    const data = JSON.stringify({...currentUser, ...values});
 
     try {
-      await request(
-        `http://localhost:3001/users/${userId}`,
-        'PUT',
-        JSON.stringify({...currentUser, ...values}));
+      await putNewsellerEmail(userId, data);
 
       const newObj = {...currentUser, newsellerEmail: currentEmail};
       login(newObj);
 
-      showStatusModal('success', `${currentEmail} started to following news`);
+      showStatusModal(`${currentEmail} started to following news`, 'success' );
     } catch (e) {
-      showStatusModal('error', 'Something went wrong. Try later');
+      showStatusModal('Something went wrong. Try later', 'error');
     }
-  }
+  };
+
 
   return (
     <section className="newseller">

@@ -7,6 +7,15 @@ import Products from '../../products/Products.js';
 import Newseller from '../../newseller/Newseller.js';
 import Footer from '../../footer/Footer.js';
 
+const content = {
+  title: () => (
+    <h4>Recently Added</h4>
+  ),
+  button: () => (
+    <Link to="/products/all">SEE ALL PRODUCTS</Link>
+  )
+};
+
 const MainPage = () => {
   return (
     <>
@@ -18,8 +27,7 @@ const MainPage = () => {
       <Category />
       <Products
         offset={10}
-        titleContent={<h4>Recently Added</h4>}
-        buttonContent={<Link to="/products/all">SEE ALL PRODUCTS</Link>}/>
+        content={content}/>
       <Newseller />
       <Footer />
     </>

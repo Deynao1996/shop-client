@@ -1,5 +1,5 @@
 import {Routes, Route} from "react-router-dom";
-import {CartProvider} from '../../contexts/CartContext.js';
+import {DataProvider} from '../../contexts/DataContext.js';
 
 import MainPage from '../pages/mainPage/MainPage.js';
 import CartPage from '../pages/cartPage/CartPage.js';
@@ -11,7 +11,7 @@ import ErrorPage from '../pages/errorPage/ErrorPage.js';
 
 const  App = () => {
   return (
-    <CartProvider>
+    <DataProvider>
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/products/all" element={<ProductsListPage/>} />
@@ -24,8 +24,8 @@ const  App = () => {
         <Route path="/signin" element={<SigninPage />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </CartProvider>
-  );
-}
+    </DataProvider>
+  )
+};
 
 export default App;

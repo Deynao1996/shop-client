@@ -44,6 +44,10 @@
       background-color: teal;
       color: white;
       cursor: pointer;
+      &:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
     }
     &-links {
       display: flex;

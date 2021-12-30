@@ -3,6 +3,7 @@ import './_errorPage.scss';
 
 const ErrorPage = () => {
   const navigate = useNavigate();
+  
 
   return (
     <div className="error">

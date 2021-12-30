@@ -23,9 +23,7 @@ const useHttp = () => {
     }
   }, []);
 
-  const clearError = useCallback(() => setItemLoadingStatus('idle'), []);
-
-  return {itemLoadingStatus, request, clearError}
+  return {itemLoadingStatus, request}
 }
 
 export default useHttp;

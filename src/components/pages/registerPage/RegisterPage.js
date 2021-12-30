@@ -2,9 +2,10 @@ import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
-import {toast, ToastContainer} from 'react-toastify';
+import {ToastContainer} from 'react-toastify';
 
-import useHttp from '../../../hooks/http.hook.js';
+import useService from '../../../hooks/useService';
+import {useFeatures} from '../../../hooks/useFeatures';
 
 import './_registerPage.scss';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,34 +23,15 @@ export function transformValueToLowerCase(value, originalvalue) {
   return this.isType(value) && value !== null ? value.toLowerCase() : value;
 }
 
-export function showStatusModal(status, message) {
-  toast(message, {type: status});
-}
-
-export const CustomField = ({type, placeholder, name, ...props}) => {
-  return (
-    <>
-      <Field
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        id={name}
-        {...props}/>
-      <ErrorMessage className="errorMessage" name={name} component="div"/>
-    </>
-  )
-}
-
 const RegisterPage = () => {
-
   const [existedUserData, setExistedUserData] = useState({
     emails: [],
     userNames: []
   });
-
   const {emails, userNames} = existedUserData;
 
-  const {request} = useHttp();
+  const {getAllUsers, createNewUser} = useService();
+  const {showStatusModal} = useFeatures();
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -84,7 +66,7 @@ const RegisterPage = () => {
     });
 
     setExistedUserData({emails, userNames})
-  }
+  };
 
   async function createUser({name, email, lastName, userName, password}) {
     const user = {
@@ -93,29 +75,28 @@ const RegisterPage = () => {
       userName: userName.toLowerCase(),
       email: email.toLowerCase(),
       password
-    }
+    };
 
     try {
-      const newUser = await request(
-        'http://localhost:3001/users',
-        'POST',
-        JSON.stringify(user));
+      const newUser = await createNewUser(JSON.stringify(user));
 
-      const existedUsers = await request('http://localhost:3001/users');
+      const existedUsers = await getAllUsers();
       setExistedsUsers(existedUsers);
 
       if (newUser) {
-        showStatusModal('success', 'Success! Your account has been created');
+        showStatusModal('Success! Your account has been created', 'success');
       }
     } catch (e) {
-      showStatusModal('error', 'Something went wrong. Please try later');
+      showStatusModal('Something went wrong. Please try later', 'error');
     }
-  }
+  };
 
   useEffect(() => {
-    request('http://localhost:3001/users')
-      .then(res => setExistedsUsers(res))
-  }, [])
+    getAllUsers()
+      .then(res => setExistedsUsers(res));
+      // eslint-disable-next-line
+  }, []);
+
 
   return (
     <div className="create">
@@ -190,6 +171,20 @@ const RegisterPage = () => {
           </Formik>
     </div>
   </div>
+  )
+};
+
+export const CustomField = ({type, placeholder, name, ...props}) => {
+  return (
+    <>
+      <Field
+        type={type}
+        placeholder={placeholder}
+        name={name}
+        id={name}
+        {...props}/>
+      <ErrorMessage className="errorMessage" name={name} component="div"/>
+    </>
   )
 };
 

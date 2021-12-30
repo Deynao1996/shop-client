@@ -1,12 +1,12 @@
-import {Link, useNavigate, useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import * as Yup from 'yup';
 import {Formik, Form} from 'formik';
 import {ToastContainer} from 'react-toastify';
+import useService from '../../../hooks/useService';
+import {useProvider} from '../../../contexts/DataContext.js';
+import {useFeatures} from '../../../hooks/useFeatures';
 
-import useHttp from '../../../hooks/http.hook.js';
-import {useCart} from '../../../contexts/CartContext.js';
-
-import {transformValueToLowerCase, showStatusModal, CustomField} from '../registerPage/RegisterPage.js';
+import {transformValueToLowerCase, CustomField} from '../registerPage/RegisterPage.js';
 
 import './_signinPage.scss';
 
@@ -16,12 +16,11 @@ const initialValues = {
 }
 
 const SigninPage = () => {
-
-  const navigate = useNavigate();
   const location = useLocation();
 
-  const {request} = useHttp();
-  const {login} = useCart();
+  const {login} = useProvider();
+  const {showStatusModal} = useFeatures();
+  const {getAllUsers} = useService();
 
   const fromCartPage = location.state;
 
@@ -35,25 +34,22 @@ const SigninPage = () => {
 
   async function handleSubmit({userName, password}) {
     try {
-      const response = await request('http://localhost:3001/users');
+      const response = await getAllUsers();
       const user = await response.find(item => item.userName === userName.toLowerCase());
 
       if (user && user.password === password && fromCartPage) {
-        login(user, redirectToPage, fromCartPage);
+        login(user, fromCartPage);
       } else if (user && user.password === password) {
-        login(user, redirectToPage, '/');
+        login(user, '/');
         return;
       } else {
-        showStatusModal('error', 'Invalid Username or Password');
+        showStatusModal('Invalid Username or Password', 'error');
       }
     } catch (e) {
-      showStatusModal('error', 'Something went wrong. Try later');
+      showStatusModal('Something went wrong. Try later', 'error');
     }
-  }
+  };
 
-  function redirectToPage(url) {
-    navigate(url, {replace: true})
-  }
 
   return (
     <div className="login">
