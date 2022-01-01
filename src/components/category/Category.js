@@ -9,7 +9,7 @@ const Category = () => {
             <div className="category__item">
               <img src="https://images.pexels.com/photos/5886041/pexels-photo-5886041.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="bg"/>
                 <div className="category__item_content">
-                    <div className="category__item_content-title">SHIRT STYLE!</div>
+                    <div className="category__item_content-title">FOR SUMMER STYLE</div>
                     <Link to="/products/summer" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>
@@ -23,7 +23,7 @@ const Category = () => {
             <div className="category__item">
               <img src="https://images.pexels.com/photos/5480696/pexels-photo-5480696.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="bg"/>
                 <div className="category__item_content">
-                    <div className="category__item_content-title">LIGHT JACKETS</div>
+                    <div className="category__item_content-title">PERFECT FOR AUTUMN SEASON</div>
                     <Link to="/products/autumn" className="category__item_content-link">SHOP NOW</Link>
                 </div>
             </div>

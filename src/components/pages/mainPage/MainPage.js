@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 
-import {HeaderBanner, HeaderPromo} from '../../header/Header.js';
+import {HeaderPromo, HeaderBanner} from '../../header/Header.js';
 import Carousel from '../../carousel/Carousel.js';
 import Category from '../../category/Category.js';
 import Products from '../../products/Products.js';
@@ -12,7 +12,7 @@ const content = {
     <h4>Recently Added</h4>
   ),
   button: () => (
-    <Link to="/products/all">SEE ALL PRODUCTS</Link>
+    <Link to="/products/all" className="products__redirect">SEE ALL PRODUCTS</Link>
   )
 };
 

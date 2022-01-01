@@ -1,13 +1,10 @@
-import {HeaderBanner, HeaderPromo} from '../../header/Header.js';
 import Product from '../../product/Product.js';
+import {Header} from '../../header/Header.js'
 
 const ProductPage = () => {
   return (
     <>
-      <header className="header">
-        <HeaderPromo />
-        <HeaderBanner />
-      </header>
+      <Header />
       <Product />
     </>
   )

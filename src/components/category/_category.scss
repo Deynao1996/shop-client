@@ -12,10 +12,12 @@
     position: relative;
     height: 70vh;
     margin: 3px;
+    overflow: hidden;
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: all .8s ease-in-out;
     }
     &_content {
       position: absolute;
@@ -51,6 +53,12 @@
         cursor: pointer;
         font-weight: 600;
         text-decoration: none;
+      }
+    }
+    &:hover {
+      img {
+        transform: scale(1.1,1.1) rotate(-2deg);
+        filter: blur(3px);
       }
     }
   }

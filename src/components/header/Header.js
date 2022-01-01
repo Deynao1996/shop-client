@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import {useProvider} from '../../contexts/DataContext.js';
 import {useFeatures} from '../../hooks/useFeatures.js';
+import {useSpring, animated} from 'react-spring';
 
 import {HiShoppingCart} from "react-icons/hi";
 import {FaSearch} from 'react-icons/fa';
@@ -11,6 +12,18 @@ const HeaderBanner = () => {
 };
 
 const HeaderPromo = () => {
+  const props = useSpring({
+    to: [
+      {opacity: 1, transform: 'scale(1.1)'},
+      {opacity: 1, transform: 'scale(1)'}
+    ],
+    from: {opacity: 0},
+    reset: true,
+    config: {
+      duration: 100
+    }
+  });
+
   const {productsSum, currentUser, signOut} = useProvider();
   const {redirectTo} = useFeatures();
 
@@ -43,11 +56,20 @@ const HeaderPromo = () => {
                 signOut={signOut}/>
               <Link to="/cart" className="header__promo_act-cart">
                 <HiShoppingCart size="1.2em"/>
-                  {productsSum ? <div>{productsSum}</div> : null}
+                  {productsSum ? <animated.div style={props}>{productsSum}</animated.div> : null}
               </Link>
           </div>
       </div>
     </>
+  )
+};
+
+const Header = () => {
+  return (
+    <header className="header">
+      <HeaderPromo />
+      <HeaderBanner />
+    </header>
   )
 };
 
@@ -67,4 +89,4 @@ const View = ({currentUser, signOut}) => {
   )
 };
 
-export {HeaderBanner, HeaderPromo};
+export {HeaderBanner, HeaderPromo, Header};

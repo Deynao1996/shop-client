@@ -5,7 +5,7 @@ import MainPage from '../pages/mainPage/MainPage.js';
 import CartPage from '../pages/cartPage/CartPage.js';
 import RegisterPage from '../pages/registerPage/RegisterPage.js';
 import SigninPage from '../pages/signinPage/SigninPage.js';
-import ProductsListPage from '../pages/productsListPage/ProductsListPage.js';
+import {ProductListLayout, ProductsPageContent} from '../pages/productsListPage/ProductsListPage.js';
 import ProductPage from '../pages/productPage/ProductPage.js';
 import ErrorPage from '../pages/errorPage/ErrorPage.js';
 
@@ -14,10 +14,12 @@ const  App = () => {
     <DataProvider>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/products/all" element={<ProductsListPage/>} />
-        <Route path="/products/summer" element={<ProductsListPage category="summer sale"/>} />
-        <Route path="/products/autumn" element={<ProductsListPage category="autum collection"/>} />
-        <Route path="/products/loungewear" element={<ProductsListPage category="loungewear lowe"/>} />
+        <Route path="/products" element={<ProductListLayout />}>
+          <Route path="all" element={<ProductsPageContent />} />
+          <Route path="summer" element={<ProductsPageContent category="summer sale"/>} />
+          <Route path="autumn" element={<ProductsPageContent category="autum collection"/>} />
+          <Route path="loungewear" element={<ProductsPageContent category="loungewear lowe"/>} />
+        </Route>
         <Route path="/products/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/register" element={<RegisterPage />} />
