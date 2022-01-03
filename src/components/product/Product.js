@@ -1,5 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {useParams} from "react-router-dom";
+import {useSpring, animated, config} from 'react-spring';
+import Zoom from 'react-img-zoom';
+import {useMediaQuery} from 'react-responsive';
+
 import useService from '../../hooks/useService';
 import {useProvider} from '../../contexts/DataContext.js';
 import {useFeatures} from '../../hooks/useFeatures';
@@ -11,6 +15,9 @@ import './_product.scss';
 const Product = () => {
   const {id} = useParams();
   const [selectedProduct, setSelectedProduct] = useState({});
+  const prevSum = useRef(1);
+  const isTablet = useMediaQuery({query: '(max-width: 992px)'});
+
   const [selectedProductOptions, setSelectedProductOptions] = useState({
     currentId: null,
     currentSize: null,
@@ -19,6 +26,13 @@ const Product = () => {
     currentSrc: null,
     currentPrice: null,
     currentTitle: null
+  });
+
+  const styles = useSpring({
+    to: {opacity: 1, transform: 'scale(0.98)'},
+    from: {opacity: 0, transform: 'scale(1.1)'},
+    reset: true,
+    config: config.wobbly
   });
 
   const {setCartItems, cartItems, addExistingProductToCart} = useProvider();
@@ -142,21 +156,32 @@ const Product = () => {
       // eslint-disable-next-line
   }, [id]);
 
-  if (itemLoadingStatus === "loading") {
+  useEffect(() => {
+    prevSum.current = selectedProductOptions.currentSum;
+  }, [selectedProductOptions.currentSum]);
+
+  if (itemLoadingStatus === "loading" || !selectedProduct?.src) {
       return <Spinner/>;
   } else if (itemLoadingStatus === "error") {
       return <h5 className="products__status">Loading error</h5>;
   }
 
   const {src, price, title, description, optionSizes, optionColors} = selectedProduct;
+
   const optionsListItems = renderOptionsList(optionSizes);
   const colorsListItems = renderColorsList(optionColors);
+  const productImage = isTablet ? <img src={src} alt="product"/> :
+  <Zoom
+    img={src}
+    zoomScale={3}
+    width={600}
+    height={600}/>
 
 
   return (
     <section className="product">
         <div className="product__logo">
-            <img src={src} alt="pdoduct"/>
+            {productImage}
         </div>
         <div className="product__content">
             <div className="product__title">{title}</div>
@@ -184,13 +209,15 @@ const Product = () => {
                       onClick={(e) => onSumSelected(e, -1)}>
                         &#8722;
                     </div>
-                    <input
+                    <animated.input
                       type="text"
                       name="sum"
                       className="product__sum"
                       value={selectedProductOptions.currentSum}
                       onChange={(e) => onHandeSumSelected(e)}
-                      onBlur={() => onInputBlur()}/>
+                      onBlur={() => onInputBlur()}
+                      style={selectedProductOptions.currentSum !== prevSum.current ? styles : null}>
+                    </animated.input>
                     <div
                       className="product__plus"
                       onClick={(e) => onSumSelected(e, 1)}>

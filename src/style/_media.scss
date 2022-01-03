@@ -1,0 +1,171 @@
+@media (max-width: 992px) {
+  .product__features, .product__send {
+    width: 100%;
+  }
+  .error__wrapper {
+    width: 40%;
+  }
+  .slider {
+    height: 75vh;
+    &__item {
+      &-img {
+        height: 75vh;
+        img {
+          height: 89%;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header__promo_search input {
+    width: 129px;
+  }
+  .slider__item-content {
+    h1 {
+      font-size: 53px;
+    }
+    span {
+      font-size: 15px;
+    }
+  }
+  .footer {
+    &__content, &__links, &__contact {
+      padding: 20px 5px;
+      span, a {
+        font-size: 12px;
+      }
+    }
+  }
+  .cart {
+    &__nav-checkout {
+      width: fit-content;
+    }
+    &__items {
+      flex: 2;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .header {
+    &__banner {
+      font-size: 11px;
+    }
+    &__promo {
+      flex-direction: column;
+      padding: 10px;
+      &_link {
+        width: 100%;
+        margin: 10px 0;
+        text-align: center;
+      }
+      &_search {
+        input {
+          width: 82%;
+        }
+      }
+    }
+  }
+  .slider {
+    height: 56vh;
+    &__item {
+      padding: 47px;
+      &-content {
+        h1 {
+          font-size: 30px;
+          text-align: center;
+        }
+        span {
+          font-size: 10px;
+          text-align: center;
+        }
+      }
+    }
+    &__btn {
+      margin: 0 auto;
+    }
+  }
+  .category {
+    padding: 0;
+    &__items {
+
+    }
+    &__item {
+      min-width: 100%;
+    }
+  }
+  .products {
+    padding: 0;
+    h4 {
+      text-align: center;
+    }
+    &__item {
+      width: 100%;
+    }
+  }
+  .newseller {
+    &__form {
+      width: auto;
+      input {
+        flex: 2;
+      }
+      button {
+        flex-basis: 15%;
+        margin-top: 10px;
+      }
+    }
+    &__content {
+      &-title {
+        font-size: 43px;
+      }
+      &-descr {
+        font-size: 16px;
+        text-align: center;
+      }
+    }
+  }
+  .footer {
+    flex-direction: column;
+  }
+  .product {
+    flex-direction: column;
+    padding: 8px;
+    &__content {
+      padding: 0;
+    }
+  }
+  .cart {
+    &__nav {
+      flex-direction: column;
+      gap: 20px;
+      &-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+    &__wrapper {
+      flex-direction: column;
+      gap: 10px;
+    }
+    &__item {
+      flex-direction: column;
+      height: auto;
+      &-content {
+        gap: 10px;
+      }
+    }
+  }
+  .create {
+    &__wrapper {
+      min-width: 40%;
+    }
+  }
+  .error {
+    &__wrapper {
+      width: 90%;
+    }
+  }
+}

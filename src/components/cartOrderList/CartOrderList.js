@@ -1,25 +1,36 @@
+import {useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import useService from '../../hooks/useService';
 import {useFeatures} from '../../hooks/useFeatures';
 import {useProvider} from '../../contexts/DataContext.js';
 import StripeCheckout from 'react-stripe-checkout';
 import {ToastContainer} from 'react-toastify';
+import {useSpring, animated, config} from 'react-spring';
 
 import {View} from '../cart/Cart.js';
 import {ImCross} from "react-icons/im";
 
 const CartOrderList = () => {
   const navigate = useNavigate();
+  const prevId = useRef(null);
 
   const {cartItems, setCartItems, currentUser} = useProvider();
   const {orderProduct} = useService();
   const {showStatusModal} = useFeatures();
+
+  const styles = useSpring({
+    to: {opacity: 1, transform: 'scale(0.98)'},
+    from: {opacity: 0, transform: 'scale(1.1)'},
+    reset: true,
+    config: config.wobbly
+  });
 
   const deleteProductFromCart = (id) => {
     setCartItems(cartItems => cartItems.filter(item => item.currentId !== id));
   };
 
   const onChangeCurrentSum = (id, currentSum, n) => {
+    prevId.current = id;
     const value = currentSum + n;
     if (value < 1) {
       return;
@@ -37,7 +48,7 @@ const CartOrderList = () => {
   }
 
   function redirectToSignInWithState() {
-    navigate('/signin', {state: '/cart'});
+    navigate('/signin', {state: '/products/cart'});
   };
 
   function calcTotalPrice(arr) {
@@ -95,7 +106,10 @@ const CartOrderList = () => {
           <div className="cart__item-features">
               <div className="cart__item-calc">
                   <span onClick={() => onChangeCurrentSum(props.currentId, props.currentSum, +1)}>&#43;</span>
-                  <div>{props.currentSum}</div>
+                  <animated.div
+                    style={props.currentId === prevId.current ? styles : null}>
+                      {props.currentSum}
+                  </animated.div>
                   <span onClick={() => onChangeCurrentSum(props.currentId, props.currentSum, -1)}>&#8722;</span>
               </div>
               <div className="cart__item-price">$ {totalItemPrice}</div>

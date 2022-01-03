@@ -11,7 +11,7 @@ const Footer = () => {
     <footer className="footer">
         <div className="footer__content">
             <h5 className="footer__content-title">SHOP.</h5>
-            <div className="footer__content-descr">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly believable.</div>
+            <span className="footer__content-descr">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don’t look even slightly believable.</span>
             <div className="footer__content-socials">
                 <a href="https://web.telegram.org/" target="_blank" rel="noopener noreferrer">
                   <FaTelegramPlane />
@@ -33,7 +33,7 @@ const Footer = () => {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/register">Create Acount</Link></li>
                 <li><Link to="/signin">Sign In</Link></li>
-                <li><Link to="/cart">Cart | Wishlist</Link></li>
+                <li><Link to="/products/cart">Cart | Wishlist</Link></li>
                 <li><Link to="/products/all">All Products</Link></li>
                 <li><Link to="/products/summer">Summer Collection</Link></li>
                 <li><Link to="/products/autumn">Autum Collection</Link></li>

@@ -23,7 +23,7 @@ const SigninPage = () => {
   const {getAllUsers} = useService();
 
   const fromCartPage = location.state;
-
+console.log(fromCartPage);
   const validationSchema = Yup.object({
     userName: Yup.string()
             .required('Required field')

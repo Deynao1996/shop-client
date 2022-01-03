@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import {useProvider} from '../../contexts/DataContext.js';
 
-import CartWishList from '../cartWishList/CartWishList';
-import CartOrderList from '../cartOrderList/CartOrderList';
+import CartWishList from '../cartWishList/CartWishList.js';
+import Footer from '../footer/Footer.js';
+import CartOrderList from '../cartOrderList/CartOrderList.js';
 
 import './_cart.scss';
 
@@ -13,6 +14,7 @@ const Cart = () => {
 
 
   return (
+    <>
     <section className="cart">
         <div className="cart__title">YOUR BAG</div>
             <div className="cart__nav">
@@ -39,6 +41,8 @@ const Cart = () => {
               }
             </div>
     </section>
+    <Footer />
+    </>
   )
 };
 

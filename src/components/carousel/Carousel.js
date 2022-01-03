@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import Slider from "react-slick";
 import {useSpring, animated} from 'react-spring';
 import Typical from 'react-typical';
+import {useMediaQuery} from 'react-responsive';
 
 import {AiOutlineArrowLeft} from "react-icons/ai";
 import {AiOutlineArrowRight} from "react-icons/ai";
@@ -39,7 +40,7 @@ const sliderContent = [
   },
   {
     src: 'https://i.ibb.co/cXFnLLV/3.png',
-    title: 'AUTUMN COLLECTION',
+    title: 'LOUNGEWEAR LOVE',
     subtitle: "DON'T COMPROMISE ON STYLE! GET FLAT 30% OFF FOR NEW ARRIVALS.",
     category: 'loungewear'
   },
@@ -53,6 +54,7 @@ const sliderContent = [
 
 const Carousel = () => {
   const [imageIndex, setImageIndex] = useState(0);
+  const isMobile = useMediaQuery({query: '(max-width: 576px)'});
 
   const settings = {
     className: 'slider',
@@ -86,12 +88,14 @@ const Carousel = () => {
       <div
         className="slider__item"
         key={i}>
-          <div className="slider__item-img">
-            <animated.div
-              className="slider__item-img-circle"
-              style={props}></animated.div>
-            <img src={src} alt="girl"/>
-          </div>
+          {!isMobile ?
+            <div className="slider__item-img">
+              <animated.div
+                className="slider__item-img-circle"
+                style={props}></animated.div>
+              <img src={src} alt="girl"/>
+            </div> :
+            null}
           <div className="slider__item-content">
               <h1>{title}</h1>
               {

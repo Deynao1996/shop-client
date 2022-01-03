@@ -20,18 +20,18 @@ const ProductsPageContent = ({category}) => {
       <Products
         category={category}
         currentFilter={currentFilter}/>
-    </>
-  )
-};
-
-const ProductListLayout = () => {
-  return (
-    <>
-      <Header />
-      <Outlet />
       <Footer />
     </>
   )
 };
 
-export {ProductListLayout, ProductsPageContent}
+const ProductsPageLayout = () => {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  )
+};
+
+export {ProductsPageLayout, ProductsPageContent}
