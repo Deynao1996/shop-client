@@ -2,7 +2,7 @@ import useHttp from './http.hook.js';
 
 const useService = () => {
   const {request, itemLoadingStatus} = useHttp();
-  const _apiBase = 'http://localhost:5000/api';
+  const _apiBase = 'https://deynao1996shop.herokuapp.com/api/';
 
   const getAllProducts = async (category = "", offset) => {
     const products = await request(`${_apiBase}/product?category=${category}&offset=${offset}`);
