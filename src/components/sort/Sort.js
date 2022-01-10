@@ -7,11 +7,12 @@ const Sort = ({category, setCurrentFilter}) => {
   const urlParams = searchParams.get('products');
 
   const sortTitle = urlParams ? 'All products matched by ' + urlParams : 'All products';
+  const currentTitle = category ? category.replace(/-/g, " ") : sortTitle;
 
 
   return (
     <section className="sort">
-        <h6 className="sort__title">{category ? category : sortTitle}</h6>
+        <h6 className="sort__title">{currentTitle}</h6>
         <div className="sort__filters">
             <div className="sort__product">
                 <span>Filter Products:</span>

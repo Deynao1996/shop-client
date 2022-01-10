@@ -121,7 +121,7 @@ const Products = ({category, currentFilter, offset, content}) => {
 
   useEffect(() => {
     getAllProducts(category, offset)
-      .then(res => setProducts(res));
+      .then(setProducts);
       // eslint-disable-next-line
   }, []);
 

@@ -151,8 +151,12 @@ const Product = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
     getProductById(id)
-      .then(res => setProduct(res, id));
+      .then(res => {
+        if (isMounted) setProduct(res, id)
+      });
+      return () => {isMounted = false}
       // eslint-disable-next-line
   }, [id]);
 

@@ -6,7 +6,7 @@ import useService from '../../../hooks/useService';
 import {useProvider} from '../../../contexts/DataContext.js';
 import {useFeatures} from '../../../hooks/useFeatures';
 
-import {transformValueToLowerCase, CustomField} from '../registerPage/RegisterPage.js';
+import {CustomField} from '../registerPage/RegisterPage.js';
 
 import './_signinPage.scss';
 
@@ -20,30 +20,32 @@ const SigninPage = () => {
 
   const {login} = useProvider();
   const {showStatusModal} = useFeatures();
-  const {getAllUsers} = useService();
+  const {signIn} = useService();
 
   const fromCartPage = location.state;
-console.log(fromCartPage);
+
   const validationSchema = Yup.object({
     userName: Yup.string()
-            .required('Required field')
-            .transform(transformValueToLowerCase),
+            .required('Required field'),
     password: Yup.string()
             .required('Required field')
   });
 
   async function handleSubmit({userName, password}) {
     try {
-      const response = await getAllUsers();
-      const user = await response.find(item => item.userName === userName.toLowerCase());
+      const user = await signIn(JSON.stringify({
+        userName: userName.toLowerCase(),
+        password
+      }));
 
-      if (user && user.password === password && fromCartPage) {
+      if (user.errorMessage) {
+        return showStatusModal(user.errorMessage, 'error');
+      }
+
+      if (user && fromCartPage) {
         login(user, fromCartPage);
-      } else if (user && user.password === password) {
+      } else if (user) {
         login(user, '/');
-        return;
-      } else {
-        showStatusModal('Invalid Username or Password', 'error');
       }
     } catch (e) {
       showStatusModal('Something went wrong. Try later', 'error');
@@ -59,10 +61,7 @@ console.log(fromCartPage);
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={(values, {resetForm}) => {
-                handleSubmit(values);
-                resetForm();
-            }}>
+              onSubmit={handleSubmit}>
             {({isSubmitting}) => (
               <Form className="login__form">
                 <CustomField

@@ -1,4 +1,3 @@
-import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import * as Yup from 'yup';
 import {Formik, Form, Field, ErrorMessage} from 'formik';
@@ -19,18 +18,8 @@ const initialValues = {
   confirmPassword: ''
 }
 
-export function transformValueToLowerCase(value, originalvalue) {
-  return this.isType(value) && value !== null ? value.toLowerCase() : value;
-}
-
 const RegisterPage = () => {
-  const [existedUserData, setExistedUserData] = useState({
-    emails: [],
-    userNames: []
-  });
-  const {emails, userNames} = existedUserData;
-
-  const {getAllUsers, createNewUser} = useService();
+  const {createNewUser} = useService();
   const {showStatusModal} = useFeatures();
 
   const validationSchema = Yup.object({
@@ -41,14 +30,10 @@ const RegisterPage = () => {
             .required('Required field')
             .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for this field'),
     userName: Yup.string()
-            .required('Required field')
-            .notOneOf(userNames, 'This username allready exist')
-            .transform(transformValueToLowerCase),
+            .required('Required field'),
     email: Yup.string()
             .required('Required field')
-            .email("Invalid email format")
-            .notOneOf(emails, 'This email allready exist')
-            .transform(transformValueToLowerCase),
+            .email("Invalid email format"),
     password: Yup.string()
             .required('Required field'),
     confirmPassword: Yup.string()
@@ -56,19 +41,7 @@ const RegisterPage = () => {
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
   });
 
-  const setExistedsUsers = (arr) => {
-    const userNames = [];
-    const emails = [];
-
-    arr.forEach(item => {
-      userNames.push(item.userName.toLowerCase());
-      emails.push(item.email.toLowerCase());
-    });
-
-    setExistedUserData({emails, userNames})
-  };
-
-  async function createUser({name, email, lastName, userName, password}) {
+  async function createUser({name, email, lastName, userName, password}, resetForm) {
     const user = {
       name,
       lastName,
@@ -78,24 +51,19 @@ const RegisterPage = () => {
     };
 
     try {
-      const newUser = await createNewUser(JSON.stringify(user));
+      const response = await createNewUser(JSON.stringify(user));
 
-      const existedUsers = await getAllUsers();
-      setExistedsUsers(existedUsers);
-
-      if (newUser) {
-        showStatusModal('Success! Your account has been created', 'success');
+      if (response.errorMessage) {
+        return showStatusModal(response.errorMessage, 'error');
       }
+
+      showStatusModal('Success! Your account has been created', 'success');
     } catch (e) {
       showStatusModal('Something went wrong. Please try later', 'error');
+    } finally {
+      resetForm();
     }
   };
-
-  useEffect(() => {
-    getAllUsers()
-      .then(res => setExistedsUsers(res));
-      // eslint-disable-next-line
-  }, []);
 
 
   return (
@@ -107,8 +75,7 @@ const RegisterPage = () => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values, {resetForm}) => {
-              createUser(values)
-              resetForm();
+              createUser(values, resetForm)
             }}>
             {({isSubmitting}) => (
               <Form className="create__form">

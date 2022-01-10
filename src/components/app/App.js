@@ -17,9 +17,9 @@ const  App = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/products" element={<ProductsPageLayout />}>
           <Route path="all" element={<ProductsPageContent />} />
-          <Route path="summer" element={<ProductsPageContent category="summer sale"/>} />
-          <Route path="autumn" element={<ProductsPageContent category="autum collection"/>} />
-          <Route path="loungewear" element={<ProductsPageContent category="loungewear lowe"/>} />
+          <Route path="summer" element={<ProductsPageContent category="summer-sale"/>} />
+          <Route path="autumn" element={<ProductsPageContent category="autum-collection"/>} />
+          <Route path="loungewear" element={<ProductsPageContent category="loungewear-lowe"/>} />
           <Route path="cart" element={<Cart />} />
           <Route path=":id" element={<Product />} />
         </Route>

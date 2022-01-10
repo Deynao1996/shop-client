@@ -2,60 +2,52 @@ import useHttp from './http.hook.js';
 
 const useService = () => {
   const {request, itemLoadingStatus} = useHttp();
-  const _apiBase = 'http://localhost:3001';
+  const _apiBase = 'http://localhost:5000/api';
 
-  const getAllProducts = async (categoty, offset) => {
-    const products = await request(`${_apiBase}/products`);
-    return _filterByCategory(products, categoty).slice(0, offset);
+  const getAllProducts = async (category = "", offset) => {
+    const products = await request(`${_apiBase}/product?category=${category}&offset=${offset}`);
+    return products;
   };
 
   const getProductById = async (id) => {
-    const products = await request(`${_apiBase}/products`);
-    return _findProductById(products, id);
+    const product = await request(`${_apiBase}/product/${id}`);
+    return product;
   };
 
-  const putNewsellerEmail = async (userId, data) => {
-    const response = await request(`${_apiBase}/users/${userId}`, 'PUT', data);
+  const userUpdate = async (userId, data) => {
+    const response = await request(`${_apiBase}/user/update/${userId}`, 'PUT', data);
     return response;
   };
 
-  const getAllUsers = async () => {
-    const allUsers = await request(`${_apiBase}/users`);
-    return allUsers;
+  const createNewUser = async (user) => {
+    const newUser = await request(`${_apiBase}/auth/register`, 'POST', user);
+    return newUser;
   };
 
-  const createNewUser = async (user) => {
-    const newUser = await request(`${_apiBase}/users`, 'POST', user);
+  const signIn = async (user) => {
+    const newUser = await request(`${_apiBase}/auth/login`, 'POST', user);
     return newUser;
   };
 
   const orderProduct = async (product) => {
-    const newProduct = await request(`${_apiBase}/orders`, 'POST', product);
+    const newProduct = await request(`${_apiBase}/orders/send`, 'POST', product);
     return newProduct;
   };
 
-  function _filterByCategory(arr, category) {
-    return arr.filter(item => {
-      if (!category) {
-        return item;
-      }
-      return item.category === category;
-    }).reverse();
-  };
-
-  function _findProductById(arr, id) {
-    const product = arr.find(item => item.id === id);
-    return product;
+  const stripeCheckout = async (stripeToken) => {
+    const response = await request(`${_apiBase}/payment/checkout`, 'POST', stripeToken);
+    return response;
   };
 
 
   return {
     getAllProducts,
     getProductById,
-    putNewsellerEmail,
-    getAllUsers,
+    userUpdate,
     createNewUser,
+    signIn,
     orderProduct,
+    stripeCheckout,
     itemLoadingStatus
   }
 };

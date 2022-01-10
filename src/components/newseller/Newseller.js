@@ -16,7 +16,7 @@ const initialValues = {
 const Newseller = () => {
   const {currentUser, login} = useProvider();
   const {showStatusModal, redirectTo} = useFeatures();
-  const {putNewsellerEmail} = useService();
+  const {userUpdate} = useService();
 
   async function handleSubmit(values) {
     if (!currentUser) {
@@ -24,14 +24,12 @@ const Newseller = () => {
     }
 
     const currentEmail = values.newsellerEmail;
-    const userId = currentUser.id;
-    const data = JSON.stringify({...currentUser, ...values});
+    const userId = currentUser._id;
 
     try {
-      await putNewsellerEmail(userId, data);
+      const updatedUser = await userUpdate(userId, JSON.stringify({hasNewSletter: true}));
 
-      const newObj = {...currentUser, newsellerEmail: currentEmail};
-      login(newObj);
+      login(updatedUser);
 
       showStatusModal(`${currentEmail} started to following news`, 'success' );
     } catch (e) {
@@ -61,12 +59,12 @@ const Newseller = () => {
                     <Form className="newseller__form">
                       <CustomField
                         type="email"
-                        placeholder={currentUser?.newsellerEmail ? "YOU ALREADY HAS BEEN SUBSCRIBED ON THE NEWSELLER" : "your email"}
+                        placeholder={currentUser?.hasNewSletter ? "YOU ALREADY HAS BEEN SUBSCRIBED ON THE NEWSELLER" : "your email"}
                         id="newsellerEmail"
                         name="newsellerEmail"
                         required={true}/>
                       <button
-                        disabled={currentUser?.newsellerEmail || isSubmitting}
+                        disabled={currentUser?.hasNewSletter || isSubmitting}
                         type="submit">
                           <FaTelegramPlane />
                       </button>

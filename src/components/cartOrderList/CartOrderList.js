@@ -15,7 +15,7 @@ const CartOrderList = () => {
   const prevId = useRef(null);
 
   const {cartItems, setCartItems, currentUser} = useProvider();
-  const {orderProduct} = useService();
+  const {orderProduct, stripeCheckout, itemLoadingStatus} = useService();
   const {showStatusModal} = useFeatures();
 
   const styles = useSpring({
@@ -61,8 +61,7 @@ const CartOrderList = () => {
   }
 
   async function handleToken(token, addresses) {
-    const {email, id, created, card:{address_city, address_country, address_line1, name}} = token;
-    const currentDate = new Date(created * 1000).toString();
+    const {email, id, card:{address_city, address_country, address_line1, name}} = token;
 
     const orderedProducts = [];
     cartItems.forEach(item => {
@@ -76,16 +75,21 @@ const CartOrderList = () => {
       address_city,
       address_country,
       address_line1,
-      currentDate,
-      orderedProducts: orderedProducts.toString()
+      orderProducts: orderedProducts.toString()
     };
 
     try {
+      await stripeCheckout(JSON.stringify({
+        id,
+        amount: calcTotalPrice(cartItems) * 100
+      }));
+
       await orderProduct(JSON.stringify(order));
 
       showStatusModal('Your payment passed. The operator will contact you', 'success');
       setCartItems(cartItems => []);
     } catch (e) {
+      console.log(e);
       showStatusModal('Something went wrong. Please try later', 'error');
     }
   };
@@ -163,7 +167,9 @@ const CartOrderList = () => {
               email={currentUser?.email || ''}>
                 <button
                   className="cart__order-checkout"
-                  disabled={!totalPrice}>CHECKOUT NOW</button>
+                  disabled={!totalPrice || itemLoadingStatus === 'loading'}>
+                    CHECKOUT NOW
+                </button>
             </StripeCheckout> :
             <button
               className="cart__order-checkout"
